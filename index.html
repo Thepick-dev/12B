@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>LMS XII</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=League+Gothic&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #ffffff;
+  --text: #000000;
+  --muted: #111;
+  --accent-pink: #ff007f;
+  --gap-large: 48px;
+}
+
+body {
+  margin:0;
+  font-family:"League Gothic", "Helvetica Neue", Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.container {
+  max-width:960px;
+  width:100%;
+  padding:20px;
+  box-sizing:border-box;
+  position: relative;
+}
+
+h1.title { 
+  font-family:"Bebas Neue", sans-serif; 
+  font-weight:400; 
+  font-size: clamp(100px, 12vw, 160px); 
+  margin: 40px 0 10px; 
+  text-align:center;
+  padding:20px;
+  border:2px solid;
+  border-image: linear-gradient(90deg, #ff007f, #00f2ff, #ffd400) 1;
+  border-radius:8px;
+  box-shadow: inset 0 -4px 10px rgba(0,0,0,0.04);
+}
+
+.tagline { 
+  font-size: clamp(26px, 5vw, 36px);
+  text-transform:uppercase;
+  font-weight:700;
+  color:var(--accent-pink);
+  text-align:center;
+  margin-bottom: var(--gap-large);
+}
+
+.main-menu { display:flex; flex-direction:column; gap:30px; align-items:center; }
+.main-menu a {
+  font-family:"League Gothic", sans-serif;
+  text-transform:uppercase;
+  font-weight:700;
+  font-size:clamp(36px, 7vw, 64px);
+  color: var(--text);
+  text-decoration:none;
+  font-style:italic;
+  position: relative;
+}
+.main-menu a::after {
+  content:"";
+  position:absolute;
+  left:0; bottom:-4px; width:100%; height:3px;
+  background:currentColor;
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+.main-menu a:hover::after { transform: scaleX(1); }
+</style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1 class="title">LMS XII</h1>
+      <div class="tagline">LET'S BE HAVING YOU</div>
+    </header>
+
+    <main class="main-menu">
+      <a href="picks.html">Predict</a>
+      <a href="table.html">Table</a>
+      <a href="rules.html">Rules</a>
+      <a href="updates.html">Updates</a>
+    </main>
+  </div>
+</body>
+</html>
