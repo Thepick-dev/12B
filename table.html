@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>LMS XII - Table</title>
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=League+Gothic&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #ffffff;
+  --text: #000000;
+  --muted: #111;
+  --accent-cyan: #00f2ff;
+  --accent-pink: #ff007f;
+  --accent-green: #00ff66;
+  --accent-orange: #ff8a2b;
+  --accent-yellow: #ffd400;
+  --gap-large: 48px;
+  --gap-mid: 28px;
+  --gap-small: 14px;
+  --neon-blur: 16px;
+  --neon-strength: 0.15;
+}
+
+body {
+  margin:0;
+  font-family:"League Gothic", "Helvetica Neue", Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+a, button { -webkit-tap-highlight-color: transparent; text-decoration:none; user-select:none; }
+a:focus, button:focus { outline:none; }
+
+.container {
+  max-width:960px;
+  width:100%;
+  padding:20px;
+  box-sizing:border-box;
+  position: relative;
+}
+
+/* Header / Navigation */
+.nav { width:100%; display:flex; justify-content:center; gap:28px; padding:12px 0; position:sticky; top:0; background:#fff; z-index:100; }
+.nav a { color:var(--muted); font-weight:700; font-size:18px; text-transform:uppercase; transition: color 200ms ease, text-shadow 200ms ease; font-family:"League Gothic", sans-serif; }
+.nav a:hover, .nav a:focus { color:var(--accent-cyan); text-shadow: 0 0 calc(var(--neon-blur) * 0.6) rgba(0,242,255,var(--neon-strength)); }
+
+/* Gradient Title Box */
+h1.title {
+  font-family:"Bebas Neue", sans-serif;
+  font-weight:400;
+  font-size: clamp(100px, 12vw, 160px);
+  margin: 40px 0 10px;
+  text-align:center;
+  padding:20px;
+  border-radius:12px;
+  background: linear-gradient(135deg, #ff007f, #00f2ff, #ff8a2b, #ffd400);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Neon Pulse Table */
+@keyframes neonPulse {
+  0%, 100% { box-shadow: 0 0 4px rgba(255,0,127,0.2); }
+  50% { box-shadow: 0 0 16px rgba(255,0,127,0.45); }
+}
+.neon { animation: neonPulse 1.5s infinite alternate; }
+
+table { width:100%; border-collapse:collapse; margin-bottom:var(--gap-mid); }
+table th, table td { border:1px solid #000; padding:12px; text-align:center; font-size:16px; text-transform:uppercase; font-style:italic; font-weight:bold; transition: box-shadow 0.2s ease, background 0.3s ease; }
+table tr:hover { box-shadow: 0 0 16px rgba(255,0,127,0.25); transform: translateY(-1px); }
+table td:hover { box-shadow: 0 0 16px rgba(255,0,127,0.25); background:rgba(255,0,127,0.03); }
+
+/* Footer */
+.footer { width:100%; display:flex; justify-content:center; gap:24px; padding:12px 0 28px; }
+.footer a { color:var(--muted); font-weight:700; font-size:18px; text-transform:uppercase; transition: color 200ms ease, text-shadow 200ms ease; font-family:"League Gothic", sans-serif; }
+.footer a:hover, .footer a:focus { color:var(--accent-cyan); text-shadow:0 0 8px rgba(0,242,255,0.12); }
+
+@media(max-width:480px){
+  h1.title{ font-size: clamp(72px, 14vw, 140px); }
+  table th, table td{ font-size:14px; padding:6px; }
+}
+</style>
+</head>
+<body>
+  <div class="container">
+    <nav class="nav" aria-label="Main navigation">
+      <a href="index.html">Home</a>
+      <a href="picks.html">Predict</a>
+      <a href="table.html">Table</a>
+      <a href="rules.html">Rules</a>
+      <a href="updates.html">Updates</a>
+    </nav>
+
+    <header>
+      <h1 class="title">LMS XII</h1>
+    </header>
+
+    <main>
+      <h2 class="neon">League Table</h2>
+      <table class="neon">
+        <tr><th>Player</th><th>Points</th><th>Teams Remaining</th></tr>
+        <tr><td>STOOBZ</td><td>102</td><td>Man Utd, Chelsea, Spurs</td></tr>
+        <tr><td>CROSBO</td><td>98</td><td>Liverpool, Arsenal, Newcastle</td></tr>
+        <tr><td>INGZ</td><td>90</td><td>Fulham, Leeds, Villa</td></tr>
+        <tr><td>KABZ</td><td>87</td><td>Brighton, Wolves, Burnley</td></tr>
+        <tr><td>KIT</td><td>85</td><td>Palace, Everton, Southampton</td></tr>
+        <tr><td>LOCKY</td><td>82</td><td>West Ham, Bournemouth, Nottingham</td></tr>
+        <tr><td>BILLY</td><td>78</td><td>Brentford, Leicester, Crystal Palace</td></tr>
+        <tr><td>T-CITY</td><td>75</td><td>Man City, Aston Villa, Newcastle</td></tr>
+      </table>
+    </main>
+
+    <footer class="footer">
+      <a href="index.html">Home</a>
+      <a href="picks.html">Predict</a>
+      <a href="table.html">Table</a>
+      <a href="rules.html">Rules</a>
+      <a href="updates.html">Updates</a>
+    </footer>
+  </div>
+</body>
+</html>
