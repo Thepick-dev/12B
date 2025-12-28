@@ -13,19 +13,18 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 body{margin:0;background:radial-gradient(circle at top,#0c0c2a,#000);color:#e8faff;font-family:"Press Start 2P",monospace;text-align:center;display:flex;flex-direction:column;align-items:center;min-height:100vh;}
 
-/* NAV - PIXEL PUSH STYLE (Option 1) */
+/* NAV - PIXEL PUSH STYLE */
 .nav {
   width: 100%;
   max-width: 960px;
   display: flex;
   justify-content: space-around;
-  /* Removed the outer border and background to focus on buttons */
   background: transparent;
   border: none;
   box-shadow: none;
   margin: 16px 0 10px;
   padding: 0;
-  gap: 10px; /* Space between the "buttons" */
+  gap: 10px; 
 }
 
 .nav a {
@@ -35,36 +34,57 @@ body{margin:0;background:radial-gradient(circle at top,#0c0c2a,#000);color:#e8fa
   color: var(--dim);
   text-decoration: none;
   background: #000;
-  /* The Tactile Block Look */
   border: 2px solid var(--dim);
   box-shadow: 4px 4px 0px var(--dim); 
-  transition: all 0.05s; /* Fast snap for arcade feel */
+  transition: all 0.05s; 
   position: relative;
   transform: translate(0, 0);
+  /* Ensure text stays centered with the arrow added */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* Hover: The Push Effect */
 .nav a:hover {
   color: var(--neon);
   border-color: var(--neon);
-  /* Move down and right */
   transform: translate(2px, 2px);
-  /* Shrink shadow to match movement */
   box-shadow: 2px 2px 0px var(--neon);
 }
 
-/* The Incorrect Highlight (Rules is active) - "Pressed" State */
+/* THE "NES CARTRIDGE" HIGHLIGHT 
+   High contrast, inverted colors, locked down state.
+*/
 .nav a.active {
-  color: var(--warn);
-  border-color: var(--warn);
-  background: #111;
-  /* Fully pressed down */
+  background: var(--warn);      /* Solid Yellow Background */
+  color: #000;                  /* Black Text */
+  border-color: var(--warn);    /* Yellow Border */
+  
+  /* Mechanically "Pressed" (No Shadow) */
+  box-shadow: none;             
   transform: translate(4px, 4px);
-  box-shadow: 0px 0px 0px transparent;
+}
+
+/* The Classic 8-Bit Cursor Arrow */
+.nav a.active::before {
+  content: '►';
+  margin-right: 8px;
+  font-size: 10px;
 }
 
 /* PANELS */
-.panel{width:100%;max-width:960px;background:var(--panel);border:2px solid var(--neon);box-shadow:0 0 25px rgba(0,246,255,.35);padding:40px 20px;margin-bottom:20px;flex:1;}
+.panel{
+  width:100%;
+  max-width:960px;
+  background:var(--panel);
+  border: none; 
+  box-shadow:0 0 25px rgba(0,246,255,.15); 
+  padding:40px 20px;
+  margin-bottom:20px;
+  flex:1;
+}
+
 h1{font-size:18px;margin:0 0 16px;color:var(--neon);text-shadow:0 0 8px rgba(0,246,255,.8);}
 .sys{margin:12px 0;font-size:12px;color:var(--warn);}
 
@@ -94,12 +114,6 @@ h1{font-size:18px;margin:0 0 16px;color:var(--neon);text-shadow:0 0 8px rgba(0,2
   top: 0; left: 0; bottom: 0;
   width: 40%;
   background: var(--pink);
-  animation: load 2s infinite linear;
-}
-
-@keyframes load {
-  0% { left: -40%; }
-  100% { left: 100%; }
 }
 
 /* BANNER */
