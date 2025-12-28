@@ -1,15 +1,14 @@
 <!doctype html>
-
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>GOALSTORM! — HOME</title>
-<link href="[https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap](https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap)" rel="stylesheet">
+<title>GOALSURGE! — HOME</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 <style>
 :root{
---bg:#050510; --panel:#0b0b1f; --neon:#00f6ff; --ok:#22ff88; --warn:#ffcc00; --dim:#666;
---cyan:#00F6FF; --yellow:#FFD60A; --pink:#FF2FC7; --white:#F7F7F2;
+  --bg:#050510; --panel:#0b0b1f; --neon:#00f6ff; --ok:#22ff88; --warn:#ffcc00; --dim:#666;
+  --cyan:#00F6FF; --yellow:#FFD60A; --pink:#FF2FC7; --white:#F7F7F2;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{margin:0;background:radial-gradient(circle at top,#0c0c2a,#000);color:#e8faff;font-family:"Press Start 2P",monospace;text-align:center;display:flex;flex-direction:column;align-items:center;min-height:100vh;}
@@ -17,6 +16,7 @@ body{margin:0;background:radial-gradient(circle at top,#0c0c2a,#000);color:#e8fa
 /* NAV */
 .nav{width:100%;max-width:960px;display:flex;justify-content:space-around;border:2px solid var(--neon);background:#000;margin:16px 0 10px;}
 .nav a{font-size:10px;padding:10px 6px;color:var(--dim);text-decoration:none;}
+
 /* HOME is now active */
 .nav a.active{color:var(--neon);text-shadow:0 0 8px rgba(0,246,255,.8);}
 
@@ -27,6 +27,8 @@ h1{font-size:20px;margin:0 0 20px;color:var(--neon);text-shadow:0 0 8px rgba(0,2
 h2{font-size:16px;color:var(--yellow);margin-bottom:14px;text-shadow:0 0 8px rgba(255,214,10,.8);}
 p.intro{font-size:10px;line-height:1.8;margin-bottom:24px;color:#e8faff;}
 .sys{margin:12px 0;font-size:12px;color:var(--warn);}
+.sys a {color: inherit; text-decoration: underline; cursor: pointer;}
+.sys a:hover {color: var(--neon);}
 
 /* FORMS & BUTTONS */
 input{width:100%;padding:10px;margin:8px 0;background:#000;color:#e8faff;border:2px solid var(--dim);font-family:inherit;font-size:10px;outline:none;}
@@ -50,50 +52,43 @@ footer{width:100%;max-width:960px;margin:20px 0;padding:20px;border-top:1px soli
 footer a{color:var(--dim);text-decoration:none;transition:color 0.2s;}
 footer a:hover{color:var(--neon);text-shadow:0 0 5px var(--neon);}
 </style>
-
 </head>
 <body>
 
 <div class="nav">
-<a href="index.html" class="active">HOME</a>
-<a href="predict.html">PLAY</a>
-<a href="scores.html">SCORES</a>
-<a href="rules.html">RULES</a>
+  <a href="index.html" class="active">HOME</a>
+  <a href="predict.html">PLAY</a>
+  <a href="scores.html">SCORES</a>
+  <a href="rules.html">RULES</a>
 </div>
 
-<img src="banner.png" class="banner" alt="GOALSTORM! Banner">
+<img src="banner.png" class="banner" alt="GOALSURGE! Banner">
 
 <div class="panel">
-<h1>WELCOME TO THE FUTURE OF FANTASY FOOTBALL</h1>
-<p class="intro">WORLD CUP 2026 IS COMING.
-
-
-
-
-
-PREPARE FOR THE ULTIMATE PREDICTION CHALLENGE. BUILD YOUR SQUAD. PREDICT THE GROUPS. STORM THE LEADERBOARD.</p>
-<div class="sys">ARE YOU READY PLAYER ONE?</div>
-<button id="registerBtn" class="mega-btn">REGISTER INTEREST</button>
+  <h1>WELCOME TO GOALSURGE!</h1>
+  <p class="intro">WORLD CUP 2026 IS COMING. GET SET FOR THE ULTIMATE PREDICTION CHALLENGE.</p>
+  <div class="sys">READ THE RULES <a href="rules.html">HERE</a>. YOU READY PLAYER ONE?</div>
+  <button id="registerBtn" class="mega-btn">REGISTER INTEREST</button>
 </div>
 
 <footer>
-<a href="privacy.html">PRIVACY POLICY</a> | © 2026 GOALSTORM INC.
+  <a href="privacy.html">PRIVACY POLICY</a> | © 2026 GOALSURGE
 </footer>
 
 <div class="overlay" id="regOverlay">
-<div class="modal-box">
-<button class="close-btn" id="closeBtn">X</button>
-<h2>STAY UPDATED</h2>
-<div class="modal-msg" id="modalFormArea">
-BE THE FIRST TO KNOW WHEN KICK-OFF APPROACHES.
-<input type="email" id="regEmail" placeholder="ENTER EMAIL ADDRESS">
-<button id="submitRegBtn">SUBMIT</button>
-<div class="sys" id="regError"></div>
-</div>
-<div class="success-msg" id="regSuccess">
-THANKS! YOU ARE ON THE LIST.
-</div>
-</div>
+  <div class="modal-box">
+    <button class="close-btn" id="closeBtn">X</button>
+    <h2>STAY UPDATED</h2>
+    <div class="modal-msg" id="modalFormArea">
+      BE THE FIRST TO KNOW WHEN KICK-OFF APPROACHES.
+      <input type="email" id="regEmail" placeholder="ENTER EMAIL ADDRESS">
+      <button id="submitRegBtn">SUBMIT</button>
+      <div class="sys" id="regError"></div>
+    </div>
+    <div class="success-msg" id="regSuccess">
+      THANKS! YOU ARE ON THE LIST.
+    </div>
+  </div>
 </div>
 
 <script>
@@ -110,38 +105,37 @@ const regError = document.getElementById('regError');
 
 // Open Modal
 registerBtn.onclick = () => {
-regOverlay.style.display = 'flex';
-regEmail.focus();
+    regOverlay.style.display = 'flex';
+    regEmail.focus();
 };
 
 // Close Modal (X button)
 closeBtn.onclick = () => {
-regOverlay.style.display = 'none';
-resetModal();
+    regOverlay.style.display = 'none';
+    resetModal();
 };
 
 // Submit Logic
 submitRegBtn.onclick = () => {
-const email = regEmail.value.trim();
-if(email.includes('@') && email.length > 5){
-// Simulate successful submission
-regFormArea.style.display = 'none';
-regSuccess.style.display = 'block';
-regError.textContent = '';
-} else {
-regError.textContent = 'INVALID EMAIL DETECTED';
-}
+    const email = regEmail.value.trim();
+    if(email.includes('@') && email.length > 5){
+        // Simulate successful submission
+        regFormArea.style.display = 'none';
+        regSuccess.style.display = 'block';
+        regError.textContent = '';
+    } else {
+        regError.textContent = 'INVALID EMAIL DETECTED';
+    }
 };
 
 function resetModal(){
-setTimeout(() => {
-regFormArea.style.display = 'block';
-regSuccess.style.display = 'none';
-regEmail.value = '';
-regError.textContent = '';
-}, 500);
+    setTimeout(() => {
+        regFormArea.style.display = 'block';
+        regSuccess.style.display = 'none';
+        regEmail.value = '';
+        regError.textContent = '';
+    }, 500);
 }
 </script>
-
 </body>
 </html>
