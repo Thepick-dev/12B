@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GOALSTORM! — WORLD CUP 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#050510; --panel:#0b0b1f; --neon:#00f6ff; --danger:#ff2e63; --ok:#22ff88; --warn:#ffcc00; --dim:#666;
+}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at top,#0c0c2a,#000);color:#e8faff;font-family:"Press Start 2P",monospace;text-align:center;}
+.stage{min-height:100vh;padding:16px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;}
+.stage.hidden{display:none;}
+.panel{width:100%;max-width:960px;background:var(--panel);border:2px solid var(--neon);box-shadow:0 0 25px rgba(0,246,255,.35);padding:20px;margin-bottom:20px;}
+h1{font-size:18px;margin:0 0 16px;color:var(--neon);text-shadow:0 0 8px rgba(0,246,255,.8);}
+.sys{margin:12px 0;font-size:10px;color:var(--warn);}
+input, select{width:100%;padding:10px;margin:8px 0;background:#000;color:#e8faff;border:2px solid var(--dim);font-family:inherit;font-size:10px;}
+input:disabled, select:disabled{opacity:.4;}
+button{padding:10px 14px;margin:6px;font-family:inherit;font-size:10px;background:#000;color:var(--neon);border:2px solid var(--neon);}
+button:disabled{opacity:.35;border-color:var(--dim);color:var(--dim);}
+.group{border:1px solid var(--dim);margin:12px 0;padding:10px;}
+.groups-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:10px;}
+.group h4{font-size:10px;margin-bottom:6px;color:var(--neon);text-transform:uppercase;}
+.team-list{display:flex;flex-direction:column;gap:4px;width:100%;}
+.team-row{display:flex;justify-content:space-between;align-items:center;gap:4px;}
+.team-name{font-size:10px;color:var(--neon);flex:1;text-align:left;}
+.team-btn{font-family:'Press Start 2P',monospace;font-size:10px;padding:4px 6px;border-radius:6px;border:2px solid var(--neon);background:transparent;color:var(--neon);cursor:pointer;text-align:center;outline:none;min-height:28px;transition:all .12s;}
+.team-btn.selected-2{background:var(--ok);color:#000;box-shadow:0 0 12px var(--ok);}
+.team-btn.selected-3{background:var(--warn);color:#000;box-shadow:0 0 12px var(--warn);}
+</style>
+</head>
+<body>
+
+<img src="banner.png" class="banner" alt="GOALSTORM! Banner">
+
+<section class="stage" id="stage1-2">
+  <div class="panel">
+    <h1>PLAYER ENTRY TERMINAL</h1>
+    <div class="sys">INSERT USER DATA</div>
+    <input id="username" placeholder="USERNAME">
+    <input id="email" placeholder="EMAIL" disabled>
+    <select id="combo" disabled>
+      <option value="">GOALSCORER COMBINATION</option>
+      <option>Messi & Ronaldo</option>
+      <option>Neymar & Mbappé</option>
+      <option>Lewandowski & Haaland</option>
+      <option>Salah & Mané</option>
+      <option>Kane & Sterling</option>
+      <option>Modrić & De Bruyne</option>
+      <option>Mbappé & Benzema</option>
+      <option>Son & Raphinha</option>
+      <option>Haaland & De Bruyne</option>
+      <option>Vinícius & Pedri</option>
+    </select>
+    <input id="goals" placeholder="TOTAL GROUP GOALS" type="number" disabled>
+    <div class="sys" id="s1msg"></div>
+  </div>
+
+  <div class="panel">
+    <h1>GROUP STAGE</h1>
+    <div class="sys">SELECT 2ND PLACE IN EACH GROUP — THEN SELECT 8 THIRD-PLACE QUALIFIERS</div>
+    <div class="groups-grid" id="groupsGrid"></div>
+    <div class="sys" id="groupMsg"></div>
+  </div>
+  <button id="beginSelector" disabled>BEGIN FINAL SELECTION</button>
+</section>
+
+<script>
+'use strict';
+
+/* ---------- STAGE 1 ---------- */
+const usernameInput=document.getElementById('username'),
+      emailInput=document.getElementById('email'),
+      comboSelect=document.getElementById('combo'),
+      goalsInput=document.getElementById('goals'),
+      s1msg=document.getElementById('s1msg'),
+      beginBtn=document.getElementById('beginSelector');
+
+usernameInput.oninput=()=>{ if(usernameInput.value.length>2) emailInput.disabled=false; }
+emailInput.oninput=()=>{ if(emailInput.value.includes('@')) comboSelect.disabled=false; }
+comboSelect.onchange=()=>{ if(comboSelect.value) goalsInput.disabled=false; }
+goalsInput.oninput=()=>{ if(goalsInput.value>0){ s1msg.textContent='PLAYER DATA READY — COMPLETE GROUP PICKS'; } }
+
+/* ---------- STAGE 2 ---------- */
+const GROUPS=[
+  ["MEXICO 🇲🇽","SOUTH AFRICA 🇿🇦","SOUTH KOREA 🇰🇷","DEN/MAC/CZE/IRL"],
+  ["CANADA 🇨🇦","ITA/NIR/WAL/BOS","QATAR 🇶🇦","SWITZERLAND 🇨🇭"],
+  ["BRAZIL 🇧🇷","MOROCCO 🇲🇦","HAITI 🇭🇹","SCOTLAND 🏴"],
+  ["USA 🇺🇸","PARAGUAY 🇵🇾","AUSTRALIA 🇦🇺","TUR/ROU/SVK/KOS"],
+  ["GERMANY 🇩🇪","CURAÇAO 🇨🇼","IVORY COAST 🇨🇮","ECUADOR 🇪🇨"],
+  ["NETHERLANDS 🇳🇱","JAPAN 🇯🇵","UKR/SWE/POL/ALB","TUNISIA 🇹🇳"],
+  ["BELGIUM 🇧🇪","EGYPT 🇪🇬","IRAN 🇮🇷","NEW ZEALAND 🇳🇿"],
+  ["SPAIN 🇪🇸","CAPE VERDE 🇨🇻","SAUDI ARABIA 🇸🇦","URUGUAY 🇺🇾"],
+  ["FRANCE 🇫🇷","SENEGAL 🇸🇳","BOL/SUR/IRQ","NORWAY 🇳🇴"],
+  ["ARGENTINA 🇦🇷","ALGERIA 🇩🇿","AUSTRIA 🇦🇹","JORDAN 🇯🇴"],
+  ["PORTUGAL 🇵🇹","JAM/NCL/DRC","UZBEKISTAN 🇺🇿","COLOMBIA 🇨🇴"],
+  ["ENGLAND 🏴","CROATIA 🇭🇷","GHANA 🇬🇭","PANAMA 🇵🇦"]
+];
+
+const MAX_THIRD=8;
+const state={ secondPicks:Array(GROUPS.length).fill(null), thirdPicks:Array(GROUPS.length).fill(null) };
+const groupsGrid=document.getElementById('groupsGrid');
+const groupMsg=document.getElementById('groupMsg');
+
+function flash(msg){ const orig=groupMsg.textContent; groupMsg.textContent=msg; setTimeout(()=>groupMsg.textContent=orig,1200); }
+
+function createGroupEl(groupIndex, teams){
+  const g=document.createElement('div'); g.className='group';
+  g.innerHTML=`<h4>GROUP ${groupIndex+1}</h4><div class="team-list"></div>`;
+  const list=g.querySelector('.team-list');
+  teams.forEach((team,idx)=>{
+    const row=document.createElement('div'); row.className='team-row';
+    const nameSpan=document.createElement('span'); nameSpan.className='team-name'; nameSpan.textContent=team;
+
+    const btn2=document.createElement('button'); btn2.className='team-btn'; btn2.textContent='2nd';
+    btn2.addEventListener('click',()=>toggleSecond(groupIndex,idx,btn2));
+
+    const btn3=document.createElement('button'); btn3.className='team-btn'; btn3.textContent='3rd';
+    btn3.addEventListener('click',()=>toggleThird(groupIndex,idx,btn3));
+
+    row.appendChild(nameSpan); row.appendChild(btn2); row.appendChild(btn3);
+    list.appendChild(row);
+  });
+  return g;
+}
+
+function renderGroups(){ groupsGrid.innerHTML=''; GROUPS.forEach((g,i)=>groupsGrid.appendChild(createGroupEl(i,g))); }
+renderGroups();
+
+function toggleSecond(group,i,btn){
+  if(state.thirdPicks[group]===i){ flash('Already selected as 3rd-place'); return; }
+  if(state.secondPicks[group]===i){ state.secondPicks[group]=null; btn.classList.remove('selected-2'); }
+  else{
+    state.secondPicks[group]=i;
+    btn.closest('.team-list').querySelectorAll('.selected-2').forEach(b=>b.classList.remove('selected-2'));
+    btn.classList.add('selected-2');
+  }
+  checkSubmit();
+}
+
+function toggleThird(group,i,btn){
+  if(state.secondPicks[group]===i){ flash('Already selected as 2nd-place'); return; }
+  const totalThird=state.thirdPicks.filter(x=>x!==null).length;
+  if(state.thirdPicks[group]===i){ state.thirdPicks[group]=null; btn.classList.remove('selected-3'); }
+  else{
+    if(totalThird>=MAX_THIRD){ flash('Already 8 third-place teams selected'); return; }
+    if(state.thirdPicks[group]!==null){
+      const prevBtn=btn.closest('.team-list').querySelector('.selected-3');
+      if(prevBtn) prevBtn.classList.remove('selected-3');
+    }
+    state.thirdPicks[group]=i; btn.classList.add('selected-3');
+  }
+  checkSubmit();
+}
+
+function checkSubmit(){
+  const allFilled=usernameInput.value.trim() && emailInput.value.trim() && comboSelect.value && goalsInput.value.trim()!=='';
+  const secondComplete=state.secondPicks.filter(x=>x!==null).length===GROUPS.length;
+  const thirdComplete=state.thirdPicks.filter(x=>x!==null).length===MAX_THIRD;
+  beginBtn.disabled=!(allFilled && secondComplete && thirdComplete);
+}
+
+</script>
+</body>
+</html>
