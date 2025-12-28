@@ -13,47 +13,54 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 body{margin:0;background:radial-gradient(circle at top,#0c0c2a,#000);color:#e8faff;font-family:"Press Start 2P",monospace;text-align:center;display:flex;flex-direction:column;align-items:center;min-height:100vh;}
 
-/* NAV - WITH ARCADE GLITCH UPGRADE */
-.nav{
-  width:100%;max-width:960px;display:flex;justify-content:space-around;
-  border:2px solid var(--neon);background:#000;margin:16px 0 10px;
-  box-shadow: 0 0 15px rgba(0, 246, 255, 0.2);
+/* NAV - PIXEL PUSH STYLE (Option 1) */
+.nav {
+  width: 100%;
+  max-width: 960px;
+  display: flex;
+  justify-content: space-around;
+  /* Removed the outer border and background to focus on buttons */
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  margin: 16px 0 10px;
+  padding: 0;
+  gap: 10px; /* Space between the "buttons" */
 }
-.nav a{
-  font-size:10px;padding:14px 6px;color:var(--dim);text-decoration:none;
-  transition: all 0.1s;
+
+.nav a {
+  flex: 1;
+  font-size: 10px;
+  padding: 14px 6px;
+  color: var(--dim);
+  text-decoration: none;
+  background: #000;
+  /* The Tactile Block Look */
+  border: 2px solid var(--dim);
+  box-shadow: 4px 4px 0px var(--dim); 
+  transition: all 0.05s; /* Fast snap for arcade feel */
   position: relative;
+  transform: translate(0, 0);
 }
 
-/* Fun Hover Effect: The Glitch Shake */
-.nav a:hover{
-  color: var(--pink);
-  text-shadow: 2px 0 var(--cyan), -2px 0 var(--yellow);
-  animation: glitch-skew 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
+/* Hover: The Push Effect */
+.nav a:hover {
+  color: var(--neon);
+  border-color: var(--neon);
+  /* Move down and right */
+  transform: translate(2px, 2px);
+  /* Shrink shadow to match movement */
+  box-shadow: 2px 2px 0px var(--neon);
 }
 
-/* The Incorrect Highlight (System Error Pulse) */
-.nav a.active{
-  color:var(--warn);
-  text-shadow:0 0 8px rgba(255, 214, 10, 0.8);
-  border-bottom: 2px solid var(--warn);
-  animation: pulse-warning 1.5s infinite;
-}
-
-/* ANIMATIONS */
-@keyframes glitch-skew {
-  0% { transform: skew(0deg); }
-  20% { transform: skew(-10deg); }
-  40% { transform: skew(10deg); }
-  60% { transform: skew(-5deg); }
-  80% { transform: skew(5deg); }
-  100% { transform: skew(0deg); }
-}
-
-@keyframes pulse-warning {
-  0% { opacity: 1; }
-  50% { opacity: 0.5; }
-  100% { opacity: 1; }
+/* The Incorrect Highlight (Rules is active) - "Pressed" State */
+.nav a.active {
+  color: var(--warn);
+  border-color: var(--warn);
+  background: #111;
+  /* Fully pressed down */
+  transform: translate(4px, 4px);
+  box-shadow: 0px 0px 0px transparent;
 }
 
 /* PANELS */
