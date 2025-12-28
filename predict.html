@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GOALSTORM! — WORLD CUP 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#050510; --panel:#0b0b1f; --neon:#00f6ff; --danger:#ff2e63; --ok:#22ff88; --warn:#ffcc00; --dim:#666;
+}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at top,#0c0c2a,#000);color:#e8faff;font-family:"Press Start 2P",monospace;text-align:center;}
+.stage{min-height:100vh;padding:16px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;}
+.stage.hidden{display:none;}
+.panel{width:100%;max-width:960px;background:var(--panel);border:2px solid var(--neon);box-shadow:0 0 25px rgba(0,246,255,.35);padding:20px;margin-bottom:20px;}
+h1{font-size:18px;margin:0 0 16px;color:var(--neon);text-shadow:0 0 8px rgba(0,246,255,.8);}
+.sys{margin:12px 0;font-size:10px;color:var(--warn);}
+input, select{width:100%;padding:10px;margin:8px 0;background:#000;color:#e8faff;border:2px solid var(--dim);font-family:inherit;font-size:10px;}
+input:disabled, select:disabled{opacity:.4;}
+button{padding:10px 14px;margin:6px;font-family:inherit;font-size:10px;background:#000;color:var(--neon);border:2px solid var(--neon);}
+button:disabled{opacity:.35;border-color:var(--dim);color:var(--dim);}
+.locked{border-color:var(--ok)!important;color:var(--ok)!important;}
+.group{border:1px solid var(--dim);margin:12px 0;padding:10px;}
+.teams{display:grid;grid-template-columns:1fr auto auto;gap:6px;font-size:9px;align-items:center;}
+.team{text-align:left;}
+.btn2{color:var(--ok);border-color:var(--ok);}
+.btn3{color:var(--warn);border-color:var(--warn);}
+.fullscreen{position:fixed;inset:0;background:#000;display:none;flex-direction:column;justify-content:center;align-items:center;z-index:999;}
+.fullscreen.active{display:flex;}
+.player-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;width:90%;max-width:900px;margin:20px auto;}
+.player{padding:12px;border:2px solid var(--dim);font-size:9px;}
+.player.active{border-color:var(--neon);box-shadow:0 0 12px rgba(0,246,255,.8);}
+.final{font-size:14px;color:var(--ok);text-shadow:0 0 10px rgba(34,255,136,.8);}
+.banner{width:100%;max-width:960px;margin-bottom:20px;}
+</style>
+</head>
+<body>
+
+<!-- BANNER PLACEHOLDER -->
+<img src="banner.png" class="banner" alt="GOALSTORM! Banner">
+
+<!-- STAGE 1 & 2 -->
+<section class="stage" id="stage1-2">
+  <div class="panel">
+    <h1>PLAYER ENTRY TERMINAL</h1>
+    <div class="sys">INSERT USER DATA</div>
+    <input id="username" placeholder="USERNAME">
+    <input id="email" placeholder="EMAIL" disabled>
+    <select id="combo" disabled>
+      <option value="">GOALSCORER COMBINATION</option>
+      <option>Messi & Ronaldo</option>
+      <option>Neymar & Mbappé</option>
+      <option>Lewandowski & Haaland</option>
+      <option>Salah & Mané</option>
+      <option>Kane & Sterling</option>
+      <option>Modrić & De Bruyne</option>
+      <option>Mbappé & Benzema</option>
+      <option>Son & Raphinha</option>
+      <option>Haaland & De Bruyne</option>
+      <option>Vinícius & Pedri</option>
+    </select>
+    <input id="goals" placeholder="TOTAL GROUP GOALS" type="number" disabled>
+    <div class="sys" id="s1msg"></div>
+  </div>
+
+  <div class="panel">
+    <h1>GROUP STAGE</h1>
+    <div class="sys">SELECT 2ND PLACE IN EACH GROUP — THEN SELECT 8 THIRD-PLACE QUALIFIERS</div>
+    <div id="groups"></div>
+    <div class="sys" id="groupMsg"></div>
+  </div>
+
+  <button id="beginSelector" disabled>BEGIN FINAL SELECTION</button>
+</section>
+
+<!-- STAGE 3 -->
+<div class="fullscreen" id="selector">
+  <h1>RANDOM PLAYER SELECTED</h1>
+  <div class="player-grid" id="players"></div>
+  <div class="sys" id="twists">TWISTS REMAINING: 2</div>
+  <button id="stick">STICK (AND SUBMIT)</button>
+  <button id="twist">TWIST</button>
+</div>
+
+<!-- STAGE 4 -->
+<section class="stage hidden" id="stage4">
+  <div class="panel">
+    <h1 class="final">ALL PICKS SUBMITTED</h1>
+    <div class="sys">FINAL DECISION CONFIRMED</div>
+  </div>
+</section>
+
+<script>
+/* ---------- STAGE 1 ---------- */
+const u=document.getElementById("username"),
+      e=document.getElementById("email"),
+      c=document.getElementById("combo"),
+      g=document.getElementById("goals"),
+      s1msg=document.getElementById("s1msg"),
+      beginBtn=document.getElementById("beginSelector");
+
+u.oninput=()=>{ if(u.value.length>2){e.disabled=false} }
+e.oninput=()=>{ if(e.value.includes("@")){c.disabled=false} }
+c.onchange=()=>{ if(c.value){g.disabled=false} }
+g.oninput=()=>{
+  if(g.value>0){
+    s1msg.textContent="PLAYER DATA READY — COMPLETE GROUP PICKS";
+    beginBtn.disabled=false;
+  }
+};
+
+/* ---------- STAGE 2 ---------- */
+const groupsData = [
+["Group 1",["Mexico 🇲🇽","South Africa 🇿🇦","South Korea 🇰🇷","Denmark / Macedonia / Czech Republic / Ireland"]],
+["Group 2",["Canada 🇨🇦","Italy / Northern Ireland / Wales / Bosnia","Qatar 🇶🇦","Switzerland 🇨🇭"]],
+["Group 3",["Brazil 🇧🇷","Morocco 🇲🇦","Haiti 🇭🇹","Scotland 🏴"]],
+["Group 4",["USA 🇺🇸","Paraguay 🇵🇾","Australia 🇦🇺","Turkey / Romania / Slovakia / Kosovo"]],
+["Group 5",["Germany 🇩🇪","Curaçao 🇨🇼","Ivory Coast 🇨🇮","Ecuador 🇪🇨"]],
+["Group 6",["Netherlands 🇳🇱","Japan 🇯🇵","Ukraine / Sweden / Poland / Albania","Tunisia 🇹🇳"]],
+["Group 7",["Belgium 🇧🇪","Egypt 🇪🇬","Iran 🇮🇷","New Zealand 🇳🇿"]],
+["Group 8",["Spain 🇪🇸","Cape Verde 🇨🇻","Saudi Arabia 🇸🇦","Uruguay 🇺🇾"]],
+["Group 9",["France 🇫🇷","Senegal 🇸🇳","Bolivia / Suriname / Iraq","Norway 🇳🇴"]],
+["Group 10",["Argentina 🇦🇷","Algeria 🇩🇿","Austria 🇦🇹","Jordan 🇯🇴"]],
+["Group 11",["Portugal 🇵🇹","Jamaica / New Caledonia / DR Congo","Uzbekistan 🇺🇿","Colombia 🇨🇴"]],
+["Group 12",["England 🏴","Croatia 🇭🇷","Ghana 🇬🇭","Panama 🇵🇦"]]
+];
+
+let thirds=0,seconds=0;
+const groups=document.getElementById("groups");
+const groupMsg=document.getElementById("groupMsg");
+
+groupsData.forEach(gp=>{
+  const box=document.createElement("div");
+  box.className="group";
+  box.innerHTML=`<div class="sys">${gp[0]}</div>`;
+  const t=document.createElement("div");
+  t.className="teams";
+  gp[1].forEach(team=>{
+    const name=document.createElement("div");
+    name.className="team"; name.textContent=team;
+    const b2=document.createElement("button"); b2.textContent="2ND"; b2.className="btn2";
+    const b3=document.createElement("button"); b3.textContent="3RD"; b3.className="btn3";
+
+    b2.onclick=()=>{
+      if(b2.classList.contains("locked"))return;
+      b2.classList.add("locked"); b3.disabled=true;
+      seconds++; checkGroups();
+    };
+    b3.onclick=()=>{
+      if(thirds>=8){groupMsg.textContent="THIRD-PLACE LIMIT REACHED";return;}
+      b3.classList.add("locked"); b2.disabled=true; thirds++; checkGroups();
+    };
+    t.append(name,b2,b3);
+  });
+  box.appendChild(t);
+  groups.appendChild(box);
+});
+
+function checkGroups(){
+  if(seconds===12 && thirds===8){
+    groupMsg.textContent="GROUP STAGE COMPLETE — FINAL PHASE UNLOCKED";
+    beginBtn.disabled=false;
+  }
+}
+
+/* ---------- STAGE 3 ---------- */
+const pool=[
+"Messi","Ronaldo","Mbappé","Haaland","Salah","Kane","Neymar","Benzema","Modrić","De Bruyne",
+"Vinícius","Pedri","Griezmann","Bellingham","Lewandowski","Son","Osimhen","Saka","Rashford","Álvarez",
+"Grealish","Foden","Ødegaard","Musiala","Kvaratskhelia","Valverde","Di María","Lukaku","Davies","Rodri"
+];
+
+const grid=document.getElementById("players");
+let index=0,twistsLeft=2,spinning=false;
+
+pool.forEach(p=>{
+  const d=document.createElement("div");
+  d.className="player"; d.textContent=p;
+  grid.appendChild(d);
+});
+
+function highlight(i){
+  [...grid.children].forEach(c=>c.classList.remove("active"));
+  grid.children[i].classList.add("active");
+}
+
+function startSelector(){
+  index=Math.floor(Math.random()*pool.length);
+  highlight(index);
+}
+
+beginBtn.onclick=()=>{
+  // Lock Stage 1 & 2
+  document.getElementById("stage1-2").classList.add("hidden");
+  document.getElementById("selector").classList.add("active");
+  startSelector();
+}
+
+document.getElementById("twist").onclick=()=>{
+  if(spinning||twistsLeft<=0)return;
+  spinning=true; twistsLeft--;
+  document.getElementById("twists").textContent="TWISTS REMAINING: "+twistsLeft;
+  let readySteps=["READY","SET","TWIST"]; let step=0;
+  const countdown=setInterval(()=>{
+    if(step<readySteps.length){document.getElementById("players").insertAdjacentHTML("beforebegin",`<div class="sys">${readySteps[step]}</div>`); step++;} 
+    else {clearInterval(countdown); let cycles=0; const spin=setInterval(()=>{
+      index=(index+1)%pool.length; highlight(index); cycles++;
+      if(cycles>30){clearInterval(spin); spinning=false; if(twistsLeft===0){lockFinal();}} },80); }
+  },400);
+};
+
+document.getElementById("stick").onclick=lockFinal;
+
+function lockFinal(){
+  document.getElementById("selector").classList.remove("active");
+  document.getElementById("stage4").classList.remove("hidden"); document.getElementById("stage4").classList.add("stage");
+}
+</script>
+
+</body>
+</html>
