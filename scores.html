@@ -120,61 +120,53 @@ footer{
 <footer>© 2026 GOALSTORM</footer>
 
 <script>
-// MOCK DATA (this becomes round1.json later)
-const players = Array.from({length:20}, (_,i)=>({
-  username:`PLAYER_${i+1}`,
-  total:60 - i,
-  tiebreak:180 - i,
-  picks:[
-    {label:"ENG (2nd)", pts:4},
-    {label:"FRA (2nd)", pts:4},
-    {label:"USA (3rd)", pts:2},
-    {label:"BRA (3rd)", pts:4},
-    {label:"Player goals", pts:10},
-    {label:"Bonus", pts:4}
-  ]
-}));
-
-// SORT BY POINTS (DESC)
-players.sort((a,b)=>b.total - a.total);
-
 const tbody = document.querySelector("#leaderboard tbody");
 
-players.forEach((p,idx)=>{
-  const row = document.createElement("tr");
-  row.innerHTML = `
-    <td>${idx+1}</td>
-    <td>${p.username}</td>
-    <td>${p.total}</td>
-    <td>${p.tiebreak}</td>
-  `;
-  row.onclick = ()=>toggle(`d${idx}`);
-  tbody.appendChild(row);
+fetch("data/round1.json")
+  .then(res => res.json())
+  .then(players => {
 
-  const detailRow = document.createElement("tr");
-  detailRow.id = `d${idx}`;
-  detailRow.className = "details";
-  detailRow.innerHTML = `
-    <td colspan="4">
-      <div class="detail-grid">
-        ${p.picks.map(pk=>`
-          <div class="pick">
-            ${pk.label}
-            <span>${pk.pts} pts</span>
+    // sort by total desc, then tiebreak asc
+    players.sort((a,b) =>
+      b.total - a.total || a.tiebreak - b.tiebreak
+    );
+
+    players.forEach((p, idx) => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${idx + 1}</td>
+        <td>${p.username}</td>
+        <td>${p.total}</td>
+        <td>${p.tiebreak}</td>
+      `;
+      row.onclick = () => toggle(`d${idx}`);
+      tbody.appendChild(row);
+
+      const detailRow = document.createElement("tr");
+      detailRow.id = `d${idx}`;
+      detailRow.className = "details";
+      detailRow.innerHTML = `
+        <td colspan="4">
+          <div class="detail-grid">
+            ${p.picks.map(pk => `
+              <div class="pick">
+                ${pk.label}
+                <span>${pk.pts} pts</span>
+              </div>
+            `).join("")}
           </div>
-        `).join("")}
-      </div>
-    </td>
-  `;
-  tbody.appendChild(detailRow);
-});
+        </td>
+      `;
+      tbody.appendChild(detailRow);
+    });
+  });
 
 function toggle(id){
   document.querySelectorAll(".details").forEach(d=>{
-    if(d.id!==id) d.style.display="none";
+    if(d.id !== id) d.style.display = "none";
   });
-  const el=document.getElementById(id);
-  el.style.display = el.style.display==="table-row" ? "none" : "table-row";
+  const el = document.getElementById(id);
+  el.style.display = el.style.display === "table-row" ? "none" : "table-row";
 }
 </script>
 
