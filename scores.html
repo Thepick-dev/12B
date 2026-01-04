@@ -53,20 +53,31 @@ th,td{
   padding:10px 6px;
   border-bottom:1px solid var(--dim);
 }
-th{
-  color:var(--warn);
-}
-tr:hover{
-  background:#060620;
-  cursor:pointer;
-}
+th{color:var(--warn);}
+tr:hover{background:#060620;cursor:pointer;}
 
+/* DETAILS GRID */
 .details{
   display:none;
-  text-align:left;
+  background:#060620;
+}
+.detail-grid{
+  display:grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap:8px;
   font-size:9px;
+  padding:12px;
   color:var(--yellow);
-  line-height:1.6;
+}
+.pick{
+  border:1px solid var(--dim);
+  padding:6px;
+  text-align:center;
+}
+.pick span{
+  display:block;
+  margin-top:4px;
+  color:#e8faff;
 }
 
 /* FOOTER */
@@ -93,7 +104,7 @@ footer{
 <div class="panel">
   <h1>ROUND 1 STANDINGS</h1>
 
-  <table>
+  <table id="leaderboard">
     <thead>
       <tr>
         <th>POS</th>
@@ -102,56 +113,68 @@ footer{
         <th>TB</th>
       </tr>
     </thead>
-    <tbody>
-
-      <!-- PLAYER ROW -->
-      <tr onclick="toggle('p1')">
-        <td>1</td>
-        <td>KIT_77</td>
-        <td>46</td>
-        <td>182</td>
-      </tr>
-      <tr id="p1" class="details">
-        <td colspan="4">
-          <strong>2nd place picks:</strong> ENG, FRA, GER, ARG, BRA, ESP, NED, ITA, USA, URU, JPN, SEN<br><br>
-          <strong>Best 3rd:</strong> KOR, MAR, SRB, DEN, CHI, MEX, POL, AUS<br><br>
-          <strong>Players:</strong> Mbappé + Kane (+ random: Saka)<br>
-          <strong>Group goals:</strong> 9
-        </td>
-      </tr>
-
-      <!-- PLAYER ROW -->
-      <tr onclick="toggle('p2')">
-        <td>2</td>
-        <td>NEONFOX</td>
-        <td>44</td>
-        <td>176</td>
-      </tr>
-      <tr id="p2" class="details">
-        <td colspan="4">
-          <strong>2nd place picks:</strong> BRA, ARG, ESP, GER, ITA, FRA, NED, URU, USA, MEX, SEN, JPN<br><br>
-          <strong>Best 3rd:</strong> POL, DEN, KOR, CHI, MAR, SRB, AUS, IRN<br><br>
-          <strong>Players:</strong> Haaland + Vinícius (+ random: Gakpo)<br>
-          <strong>Group goals:</strong> 8
-        </td>
-      </tr>
-
-    </tbody>
+    <tbody></tbody>
   </table>
-
 </div>
 
-<footer>
-  © 2026 GOALSTORM
-</footer>
+<footer>© 2026 GOALSTORM</footer>
 
 <script>
+// MOCK DATA (this becomes round1.json later)
+const players = Array.from({length:20}, (_,i)=>({
+  username:`PLAYER_${i+1}`,
+  total:60 - i,
+  tiebreak:180 - i,
+  picks:[
+    {label:"ENG (2nd)", pts:4},
+    {label:"FRA (2nd)", pts:4},
+    {label:"USA (3rd)", pts:2},
+    {label:"BRA (3rd)", pts:4},
+    {label:"Player goals", pts:10},
+    {label:"Bonus", pts:4}
+  ]
+}));
+
+// SORT BY POINTS (DESC)
+players.sort((a,b)=>b.total - a.total);
+
+const tbody = document.querySelector("#leaderboard tbody");
+
+players.forEach((p,idx)=>{
+  const row = document.createElement("tr");
+  row.innerHTML = `
+    <td>${idx+1}</td>
+    <td>${p.username}</td>
+    <td>${p.total}</td>
+    <td>${p.tiebreak}</td>
+  `;
+  row.onclick = ()=>toggle(`d${idx}`);
+  tbody.appendChild(row);
+
+  const detailRow = document.createElement("tr");
+  detailRow.id = `d${idx}`;
+  detailRow.className = "details";
+  detailRow.innerHTML = `
+    <td colspan="4">
+      <div class="detail-grid">
+        ${p.picks.map(pk=>`
+          <div class="pick">
+            ${pk.label}
+            <span>${pk.pts} pts</span>
+          </div>
+        `).join("")}
+      </div>
+    </td>
+  `;
+  tbody.appendChild(detailRow);
+});
+
 function toggle(id){
-  document.querySelectorAll('.details').forEach(d=>{
-    if(d.id !== id) d.style.display = 'none';
+  document.querySelectorAll(".details").forEach(d=>{
+    if(d.id!==id) d.style.display="none";
   });
-  const el = document.getElementById(id);
-  el.style.display = el.style.display === 'table-row' ? 'none' : 'table-row';
+  const el=document.getElementById(id);
+  el.style.display = el.style.display==="table-row" ? "none" : "table-row";
 }
 </script>
 
