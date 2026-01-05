@@ -1,0 +1,629 @@
+Here is the complete, single-file HTML solution. I have maintained the "Version 1" aesthetic (SNES/Arcade/Cyberpunk) and expanded the logic to handle the specific complexity of Round 3 (Semi-finals, Play-offs, Finals, and the Risk/Hedge logic).
+
+I have centralized the **Team Names** at the top of the JavaScript section so you can easily change them (e.g., swapping England for Brazil) and it will update the entire form automatically.
+
+### How to use:
+
+1. Save the code below as an `.html` file (e.g., `round3.html`).
+2. Ensure you have an image named `banner1.jpg` in the same folder (or the banner area will just show a broken image icon).
+3. Open in any browser.
+
+```html
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GOALSTORM! — ROUND 3</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+:root{
+  --panel: #0b0b1f;
+  --neon: #00f6ff;
+  --dim: #444;
+  --cyan: #00F6FF;
+  --yellow: #FFD60A;
+  --pink: #FF2FC7;
+  --purple: #D94CFF;
+  --white: #F7F7F2;
+  --ok: #22ff88;
+  --warn: #ffcc00;
+  --danger: #ff0055;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  background:radial-gradient(circle at top,#1a1a3a,#000);
+  color:#e8faff;
+  font-family:"Press Start 2P",monospace;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  min-height: 100vh;
+  padding-bottom: 40px;
+}
+
+/* NAV */
+.nav{
+  width:100%;max-width:800px;
+  display:flex;justify-content:space-around;
+  margin:16px auto 10px;padding:0 10px;gap:6px;
+}
+.nav a{
+  flex:1;font-size:10px;padding:12px 4px;color:#567;
+  text-decoration:none;border:1px solid rgba(0,246,255,.25);
+  box-shadow:0 0 6px rgba(0,246,255,.1);display:flex;
+  align-items:center;justify-content:center; text-align:center;
+  transition: all 0.2s;
+}
+.nav a.active{
+  color:var(--white); 
+  background: var(--purple);
+  border:2px solid var(--white);
+  box-shadow:0 0 15px var(--purple);
+  text-shadow: 2px 2px 0px #000;
+}
+
+/* BANNER */
+.banner-slot{width:100%;max-width:800px;margin-bottom:20px; border: 2px solid var(--dim);}
+.banner-slot img{width:100%;display:block; min-height:100px; background:#000;}
+
+/* PANELS */
+.panel{
+  width:100%;max-width:800px;
+  background:var(--panel);
+  border:2px solid var(--neon);
+  box-shadow:0 0 15px rgba(0,246,255,.15);
+  padding:20px;margin-bottom:20px;
+  position:relative;
+}
+h1{font-size:16px;margin-bottom:16px;color:var(--neon); text-transform: uppercase; line-height: 1.4;}
+h2{font-size:12px;margin: 20px 0 10px; color:var(--yellow);}
+.instructions{font-size:10px;line-height:1.6;color:#aaa;margin-bottom:15px;}
+
+/* INPUTS */
+.input-group { margin-bottom: 10px; }
+label { font-size: 10px; color: var(--pink); display:block; margin-bottom:5px;}
+input, select{
+  width:100%;padding:12px;
+  background:#000;color:var(--white);
+  border:2px solid var(--dim);
+  font-family:inherit;font-size:10px;
+  outline:none;
+}
+input:focus, select:focus { border-color:var(--yellow); }
+input::placeholder{color:var(--dim);}
+
+/* MATCH PREDICTION GRID */
+.match-container {
+    border: 1px solid var(--dim);
+    padding: 10px;
+    margin-bottom: 20px;
+    background: rgba(0,0,0,0.3);
+}
+.match-title { text-align: center; color: var(--pink); margin-bottom: 10px; font-size: 12px; }
+
+/* METHOD SELECTION (6 boxes) */
+.method-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+.team-col { display: flex; flex-direction: column; gap: 5px; }
+.team-header { color: var(--neon); font-size: 10px; margin-bottom: 5px; text-align: center;}
+
+.btn-select {
+    background: #111;
+    border: 1px solid var(--dim);
+    color: #888;
+    padding: 10px;
+    font-family: inherit;
+    font-size: 8px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.1s;
+}
+.btn-select:hover { border-color: var(--white); color: var(--white); }
+.btn-select.selected {
+    background: var(--neon);
+    color: #000;
+    border-color: var(--neon);
+    box-shadow: 0 0 10px var(--neon);
+    font-weight: bold;
+}
+
+/* TIME GRID */
+.time-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 5px;
+}
+@media(max-width: 600px) { .time-grid { grid-template-columns: repeat(3, 1fr); } }
+.time-btn {
+    padding: 8px 2px;
+    font-size: 7px;
+    border: 1px solid var(--dim);
+    background: #000;
+    color: #aaa;
+    cursor: pointer;
+}
+.time-btn:hover { border-color: var(--yellow); }
+.time-btn.selected {
+    background: var(--yellow);
+    color: #000;
+    border-color: var(--yellow);
+    box-shadow: 0 0 10px var(--yellow);
+}
+
+/* HEDGE VS RISK */
+.strategy-toggle {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+.strat-btn {
+    flex: 1;
+    padding: 15px;
+    border: 2px solid var(--dim);
+    background: #000;
+    color: var(--dim);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 10px;
+}
+.strat-btn.active-hedge {
+    border-color: var(--ok);
+    color: var(--ok);
+    box-shadow: inset 0 0 10px var(--ok);
+}
+.strat-btn.active-risk {
+    border-color: var(--danger);
+    color: var(--danger);
+    box-shadow: inset 0 0 10px var(--danger);
+    animation: pulseRisk 2s infinite;
+}
+
+@keyframes pulseRisk { 0%{box-shadow:inset 0 0 5px var(--danger);} 50%{box-shadow:inset 0 0 20px var(--danger);} 100%{box-shadow:inset 0 0 5px var(--danger);} }
+
+.strat-content { display: none; padding: 15px; border: 1px dashed var(--dim); }
+.strat-content.visible { display: block; }
+
+/* RED CARDS (Vertical Stack) */
+.option-stack { display: flex; flex-direction: column; gap: 8px; }
+.option-row {
+    display: flex;
+    align-items: flex-start;
+    padding: 10px;
+    border: 1px solid var(--dim);
+    cursor: pointer;
+    font-size: 9px;
+    line-height: 1.4;
+    gap: 10px;
+}
+.option-row:hover { border-color: var(--pink); }
+.option-row.selected {
+    border-color: var(--pink);
+    background: rgba(255, 47, 199, 0.1);
+    color: var(--pink);
+    box-shadow: 0 0 5px var(--pink);
+}
+.opt-letter { font-weight: bold; color: var(--yellow); min-width: 20px;}
+
+/* SUBMIT */
+.submit-area { width: 100%; max-width: 800px; padding: 20px; text-align: center; }
+#submitBtn {
+    background: #000;
+    color: var(--dim);
+    border: 2px solid var(--dim);
+    padding: 20px 40px;
+    font-family: inherit;
+    font-size: 14px;
+    cursor: not-allowed;
+    width: 100%;
+}
+#submitBtn.ready {
+    border-color: var(--ok);
+    color: var(--ok);
+    cursor: pointer;
+    box-shadow: 0 0 20px var(--ok);
+    animation: pulseReady 1.5s infinite;
+}
+@keyframes pulseReady { 0%{transform:scale(1);} 50%{transform:scale(1.02);} 100%{transform:scale(1);} }
+
+/* MODAL */
+#summaryModal {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.95);
+    z-index: 1000;
+    padding: 20px;
+    overflow-y: auto;
+}
+.modal-content {
+    max-width: 600px;
+    margin: 40px auto;
+    background: var(--panel);
+    border: 2px solid var(--yellow);
+    padding: 20px;
+    text-align: center;
+}
+.summary-list { text-align: left; margin: 20px 0; font-size: 10px; color: #ccc;}
+.summary-list li { margin-bottom: 8px; border-bottom: 1px solid #333; padding-bottom: 4px; list-style: none;}
+.summary-list strong { color: var(--neon); }
+
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <a href="#">HOME</a>
+  <a href="#" class="active">PLAY</a>
+  <a href="#">SCORES</a>
+  <a href="#">RULES</a>
+</div>
+
+<div class="banner-slot">
+  <img src="banner1.jpg" alt="GOALSTORM BANNER">
+</div>
+
+<div class="panel">
+    <h1>PLAYER TERMINAL</h1>
+    <div class="input-group">
+        <input type="text" id="username" placeholder="YOUR USERNAME (Existing or New)" oninput="validate()">
+    </div>
+    <div class="input-group">
+        <input type="email" id="email" placeholder="YOUR EMAIL" oninput="validate()">
+    </div>
+    <div class="input-group">
+        <label>TIEBREAKER: TOTAL YELLOW CARDS IN FINAL 4 GAMES?</label>
+        <input type="number" id="tiebreaker" placeholder="ENTER NUMBER" oninput="validate()">
+    </div>
+</div>
+
+<div class="panel">
+    <h1>ROUND 3: SEMI FINALS</h1>
+    <div class="instructions">POINTS: Correct Winner (5pts), Correct Method (3pts), Time Block (5pts).</div>
+    
+    <div id="sf1-container"></div>
+    
+    <div id="sf2-container"></div>
+</div>
+
+<div class="panel">
+    <h1>3RD PLACE PLAYOFF</h1>
+    <div class="instructions">Loser SF1 vs Loser SF2</div>
+    <div id="playoff-container"></div>
+</div>
+
+<div class="panel">
+    <h1>WORLD CUP WINNER</h1>
+    <div class="instructions">CHOOSE YOUR STRATEGY. HEDGE for safe points or RISK IT all for a big bonus.</div>
+    
+    <div class="strategy-toggle">
+        <button class="strat-btn" id="btnHedge" onclick="setStrategy('hedge')">HEDGE IT<br><span style="font-size:8px; margin-top:5px; display:block;">(RANK 1-4)</span></button>
+        <button class="strat-btn" id="btnRisk" onclick="setStrategy('risk')">RISK IT<br><span style="font-size:8px; margin-top:5px; display:block;">(PICK 1 WINNER)</span></button>
+    </div>
+
+    <div id="hedgeContent" class="strat-content">
+        <h2 style="margin-top:0">RANK THE TEAMS</h2>
+        <div class="instructions">1st = 10pts, 2nd = 7pts, 3rd = 5pts, 4th = 2pts (Example)</div>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+            <select id="rank1" onchange="validate()"><option value="">1ST PLACE PREDICTION...</option></select>
+            <select id="rank2" onchange="validate()"><option value="">2ND PLACE PREDICTION...</option></select>
+            <select id="rank3" onchange="validate()"><option value="">3RD PLACE PREDICTION...</option></select>
+            <select id="rank4" onchange="validate()"><option value="">4TH PLACE PREDICTION...</option></select>
+        </div>
+    </div>
+
+    <div id="riskContent" class="strat-content">
+        <h2 style="margin-top:0; color:var(--danger)">ALL OR NOTHING</h2>
+        <div class="instructions">Pick the winner. 25 Points if correct. 0 if wrong.</div>
+        <select id="riskSelect" onchange="validate()"><option value="">SELECT CHAMPION...</option></select>
+    </div>
+</div>
+
+<div class="panel">
+    <h1>THE FINAL</h1>
+    <div class="instructions">Winner SF1 vs Winner SF2</div>
+    <div id="final-container"></div>
+</div>
+
+<div class="panel">
+    <h1>RED CARD CHAOS [10pts]</h1>
+    <div class="instructions">Pick ONE scenario. Cards to players on pitch only.</div>
+    <div class="option-stack" id="redCardOptions">
+        </div>
+</div>
+
+<div class="panel">
+    <h1>PLAYER COMBO [15pts]</h1>
+    <div class="instructions">Pick the duo with most Goals + Assists combined in final 4 games.</div>
+    <select id="playerCombo" onchange="validate()">
+        <option value="">SELECT DUO...</option>
+        <option>Mbappe & Kane</option>
+        <option>Messi & Alvarez</option>
+        <option>Yamal & Williams</option>
+        <option>Bellingham & Saka</option>
+        <option>Griezmann & Giroud</option>
+        <option>Vinicius & Rodrygo</option>
+        <option>Lautaro & Di Maria</option>
+        <option>Foden & Palmer</option>
+    </select>
+</div>
+
+<div class="panel">
+    <h1>TOTAL GOALS [10pts]</h1>
+    <div class="instructions">Total goals scored in the final 4 matches combined.</div>
+    <div class="time-grid" id="totalGoalsGrid">
+        <button class="time-btn" onclick="selectTotalGoals(this, '0-5')">0-5</button>
+        <button class="time-btn" onclick="selectTotalGoals(this, '6-8')">6-8</button>
+        <button class="time-btn" onclick="selectTotalGoals(this, '9-11')">9-11</button>
+        <button class="time-btn" onclick="selectTotalGoals(this, '12-14')">12-14</button>
+        <button class="time-btn" onclick="selectTotalGoals(this, '15-17')">15-17</button>
+        <button class="time-btn" onclick="selectTotalGoals(this, '18-20')">18-20</button>
+        <button class="time-btn" onclick="selectTotalGoals(this, '21+')">21+</button>
+    </div>
+</div>
+
+<div class="submit-area">
+    <button id="submitBtn" disabled onclick="showSummary()">SUBMIT PICKS</button>
+</div>
+
+<div id="summaryModal">
+    <div class="modal-content">
+        <h1 style="color:var(--yellow)">CONFIRM PICKS</h1>
+        <ul id="summaryList" class="summary-list"></ul>
+        <div style="display:flex; gap:10px; margin-top:20px;">
+            <button onclick="location.reload()" style="flex:1; padding:15px; background:var(--dim); color:#fff; border:none; cursor:pointer;">HOME</button>
+            <button onclick="alert('Data Submitted! (Simulation)')" style="flex:1; padding:15px; background:var(--ok); color:#000; border:none; cursor:pointer;">CONFIRM</button>
+        </div>
+        <button onclick="document.getElementById('summaryModal').style.display='none'" style="margin-top:10px; width:100%; background:transparent; border:none; color:var(--pink); cursor:pointer;">GO BACK / EDIT</button>
+    </div>
+</div>
+
+<script>
+// --- CONFIGURATION ---
+// Change these team names easily here
+const CONFIG = {
+    sf1_home: "ENGLAND",
+    sf1_away: "FRANCE",
+    sf2_home: "SPAIN",
+    sf2_away: "ARGENTINA",
+    match_points: "10 pts" // Display text only
+};
+
+// --- STATE MANAGEMENT ---
+const picks = {
+    user: '', email: '', tiebreaker: '',
+    sf1: { winner: null, method: null, time: null },
+    sf2: { winner: null, method: null, time: null },
+    p3:  { winner: null, method: null, time: null },
+    fin: { winner: null, method: null, time: null },
+    strategy: null, // 'hedge' or 'risk'
+    hedge: [null, null, null, null],
+    risk: null,
+    redCard: null,
+    combo: null,
+    totalGoals: null
+};
+
+const TEAMS = [CONFIG.sf1_home, CONFIG.sf1_away, CONFIG.sf2_home, CONFIG.sf2_away];
+
+// --- INITIALIZATION ---
+window.onload = function() {
+    renderMatch('sf1-container', 'sf1', CONFIG.sf1_home, CONFIG.sf1_away, 'SEMI FINAL 1');
+    renderMatch('sf2-container', 'sf2', CONFIG.sf2_home, CONFIG.sf2_away, 'SEMI FINAL 2');
+    renderMatch('playoff-container', 'p3', 'SF1 LOSER', 'SF2 LOSER', '3RD PLACE PLAYOFF');
+    renderMatch('final-container', 'fin', 'SF1 WINNER', 'SF2 WINNER', 'THE FINAL');
+    
+    renderRedCardOptions();
+    populateTeamDropdowns();
+};
+
+// --- RENDER FUNCTIONS ---
+function renderMatch(containerId, matchKey, home, away, title) {
+    const c = document.getElementById(containerId);
+    
+    let html = `
+    <div class="match-container">
+        <div class="match-title">${title}</div>
+        
+        <div style="font-size:8px; color:var(--cyan); margin-bottom:5px;">WINNER & METHOD [5pts]</div>
+        <div class="method-grid" id="grid-${matchKey}">
+            <div class="team-col">
+                <div class="team-header">${home}</div>
+                <button class="btn-select" onclick="selectMatchResult('${matchKey}', '${home}', 'Normal Time', this)">Normal Time</button>
+                <button class="btn-select" onclick="selectMatchResult('${matchKey}', '${home}', 'Extra Time', this)">Extra Time</button>
+                <button class="btn-select" onclick="selectMatchResult('${matchKey}', '${home}', 'Penalties', this)">Penalties</button>
+            </div>
+            <div class="team-col">
+                <div class="team-header">${away}</div>
+                <button class="btn-select" onclick="selectMatchResult('${matchKey}', '${away}', 'Normal Time', this)">Normal Time</button>
+                <button class="btn-select" onclick="selectMatchResult('${matchKey}', '${away}', 'Extra Time', this)">Extra Time</button>
+                <button class="btn-select" onclick="selectMatchResult('${matchKey}', '${away}', 'Penalties', this)">Penalties</button>
+            </div>
+        </div>
+
+        <div style="font-size:8px; color:var(--cyan); margin-bottom:5px;">TIME OF 1ST GOAL [5pts]</div>
+        <div class="time-grid" id="time-${matchKey}">
+            ${['0-10','11-20','21-30','31-40','41-50','51-60','61-70','71-80','81-90', 'Added Time', 'ET 1st', 'ET 2nd']
+              .map(t => `<button class="time-btn" onclick="selectMatchTime('${matchKey}', '${t}', this)">${t}</button>`).join('')}
+        </div>
+    </div>
+    `;
+    c.innerHTML = html;
+}
+
+function renderRedCardOptions() {
+    const opts = [
+        {id:'A', text: "There will NOT be a red card in any of the final 4 matches."},
+        {id:'B', text: "There will be EXACTLY 1 red card given during the final 4 matches."},
+        {id:'C', text: "There will be MORE THAN 1 red card given across the final 4 matches."},
+        {id:'D', text: "There will be a red card given during at least 1 of the SEMI FINALS."},
+        {id:'E', text: "There will be a red card given during the FINAL or 3rd/4th playoff."},
+        {id:'F', text: "There will be a red card given during the FINAL."}
+    ];
+    
+    const container = document.getElementById('redCardOptions');
+    opts.forEach(opt => {
+        const div = document.createElement('div');
+        div.className = 'option-row';
+        div.innerHTML = `<span class="opt-letter">${opt.id}</span> <span>${opt.text}</span>`;
+        div.onclick = () => selectRedCard(opt.id, div);
+        container.appendChild(div);
+    });
+}
+
+function populateTeamDropdowns() {
+    const selects = ['rank1', 'rank2', 'rank3', 'rank4', 'riskSelect'];
+    selects.forEach(sId => {
+        const sel = document.getElementById(sId);
+        TEAMS.forEach(team => {
+            const opt = document.createElement('option');
+            opt.value = team;
+            opt.text = team;
+            sel.add(opt);
+        });
+    });
+}
+
+// --- INTERACTION LOGIC ---
+
+function selectMatchResult(matchKey, winner, method, btn) {
+    // UI Update
+    const grid = document.getElementById(`grid-${matchKey}`);
+    grid.querySelectorAll('.btn-select').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    
+    // State Update
+    picks[matchKey].winner = winner;
+    picks[matchKey].method = method;
+    validate();
+}
+
+function selectMatchTime(matchKey, time, btn) {
+    const grid = document.getElementById(`time-${matchKey}`);
+    grid.querySelectorAll('.time-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    
+    picks[matchKey].time = time;
+    validate();
+}
+
+function setStrategy(strat) {
+    picks.strategy = strat;
+    
+    // UI Toggle
+    document.getElementById('btnHedge').className = strat === 'hedge' ? 'strat-btn active-hedge' : 'strat-btn';
+    document.getElementById('btnRisk').className = strat === 'risk' ? 'strat-btn active-risk' : 'strat-btn';
+    
+    document.getElementById('hedgeContent').className = strat === 'hedge' ? 'strat-content visible' : 'strat-content';
+    document.getElementById('riskContent').className = strat === 'risk' ? 'strat-content visible' : 'strat-content';
+    
+    // Clear data of the other strategy
+    if(strat === 'risk') {
+        ['rank1','rank2','rank3','rank4'].forEach(id => document.getElementById(id).value = "");
+    } else {
+        document.getElementById('riskSelect').value = "";
+    }
+    
+    validate();
+}
+
+function selectRedCard(optId, el) {
+    document.querySelectorAll('.option-row').forEach(row => row.classList.remove('selected'));
+    el.classList.add('selected');
+    picks.redCard = optId;
+    validate();
+}
+
+function selectTotalGoals(btn, val) {
+    document.getElementById('totalGoalsGrid').querySelectorAll('.time-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    picks.totalGoals = val;
+    validate();
+}
+
+// --- VALIDATION ---
+function validate() {
+    // Basic Inputs
+    picks.user = document.getElementById('username').value;
+    picks.email = document.getElementById('email').value;
+    picks.tiebreaker = document.getElementById('tiebreaker').value;
+    
+    let valid = true;
+    
+    if(!picks.user || !picks.email || !picks.tiebreaker) valid = false;
+    
+    // Matches
+    ['sf1','sf2','p3','fin'].forEach(m => {
+        if(!picks[m].winner || !picks[m].time) valid = false;
+    });
+    
+    // Strategy
+    if(!picks.strategy) valid = false;
+    if(picks.strategy === 'risk') {
+        picks.risk = document.getElementById('riskSelect').value;
+        if(!picks.risk) valid = false;
+    } else if (picks.strategy === 'hedge') {
+        picks.hedge = [
+            document.getElementById('rank1').value,
+            document.getElementById('rank2').value,
+            document.getElementById('rank3').value,
+            document.getElementById('rank4').value
+        ];
+        if(picks.hedge.includes("")) valid = false;
+    }
+    
+    // Extras
+    if(!picks.redCard) valid = false;
+    
+    picks.combo = document.getElementById('playerCombo').value;
+    if(!picks.combo) valid = false;
+    
+    if(!picks.totalGoals) valid = false;
+    
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = !valid;
+    if(valid) btn.classList.add('ready'); else btn.classList.remove('ready');
+}
+
+// --- SUMMARY ---
+function showSummary() {
+    const list = document.getElementById('summaryList');
+    let html = `
+        <li><strong>PLAYER:</strong> ${picks.user}</li>
+        <li><strong>EMAIL:</strong> ${picks.email}</li>
+        <li><strong>TB (YELLOW CARDS):</strong> ${picks.tiebreaker}</li>
+        <br>
+        <li><strong>SF1:</strong> ${picks.sf1.winner} (${picks.sf1.method}) | Goal: ${picks.sf1.time}</li>
+        <li><strong>SF2:</strong> ${picks.sf2.winner} (${picks.sf2.method}) | Goal: ${picks.sf2.time}</li>
+        <li><strong>3RD:</strong> ${picks.p3.winner} (${picks.p3.method}) | Goal: ${picks.p3.time}</li>
+        <li><strong>FINAL:</strong> ${picks.fin.winner} (${picks.fin.method}) | Goal: ${picks.fin.time}</li>
+        <br>
+        <li><strong>WINNER STRATEGY:</strong> ${picks.strategy.toUpperCase()}</li>
+    `;
+    
+    if(picks.strategy === 'risk') {
+        html += `<li><strong>CHAMPION PICK:</strong> ${picks.risk}</li>`;
+    } else {
+        html += `<li><strong>1ST:</strong> ${picks.hedge[0]}</li>`;
+        html += `<li><strong>2ND:</strong> ${picks.hedge[1]}</li>`;
+        html += `<li><strong>3RD:</strong> ${picks.hedge[2]}</li>`;
+    }
+    
+    html += `<br>
+        <li><strong>RED CARD:</strong> Option ${picks.redCard}</li>
+        <li><strong>COMBO:</strong> ${picks.combo}</li>
+        <li><strong>TOTAL GOALS:</strong> ${picks.totalGoals}</li>
+    `;
+    
+    list.innerHTML = html;
+    document.getElementById('summaryModal').style.display = 'block';
+}
+
+</script>
+</body>
+</html>
+
+```
