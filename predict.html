@@ -1,18 +1,17 @@
 <!doctype html>
-
-<html lang="en">  
-<head>  
-<meta charset="utf-8">  
-<meta name="viewport" content="width=device-width, initial-scale=1">  
-<title>GOALSTORM! — WORLD CUP 2026</title>  
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">  
-<style>  
-:root{  
-  --bg:#050510; --panel:#0b0b1f; --neon:#00f6ff; --ok:#22ff88; --warn:#ffcc00; --dim:#666;  
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GOALSTORM! — WORLD CUP 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#050510; --panel:#0b0b1f; --neon:#00f6ff; --ok:#22ff88; --warn:#ffcc00; --dim:#666;
   --cyan:#00F6FF; --yellow:#FFD60A; --pink:#FF2FC7; --white:#F7F7F2; --purple:#B026FF;
-}  
-*{box-sizing:border-box;margin:0;padding:0;}  
-body{margin:0;background:radial-gradient(circle at top,#0c0c2a,#000);color:#e8faff;font-family:"Press Start 2P",monospace;text-align:center;display:flex;flex-direction:column;align-items:center;}  
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{margin:0;background:radial-gradient(circle at top,#0c0c2a,#000);color:#e8faff;font-family:"Press Start 2P",monospace;text-align:center;display:flex;flex-direction:column;align-items:center;}
 
 /* NAV */
 .nav {
@@ -51,7 +50,7 @@ body{margin:0;background:radial-gradient(circle at top,#0c0c2a,#000);color:#e8fa
   background: #000;
   padding: 10px 4px;
   box-shadow: 0 0 5px var(--purple),
-              inset 0 0 10px rgba(176,38,255,.2);
+             inset 0 0 10px rgba(176,38,255,.2);
   animation: power-surge-purple 1.2s infinite ease-in-out;
 }
 
@@ -160,279 +159,309 @@ button:disabled{opacity:.35;border-color:var(--dim);color:var(--dim);cursor:not-
 .summary-item span.third{color:var(--pink);}
 </style>
 
-</head>  <body>  <div class="nav" id="nav">  
-  <a href="index.html">HOME</a>  
-  <a href="predict.html" class="active">PLAY</a>  
-  <a href="scores.html">SCORES</a>  
-  <a href="rules.html">RULES</a>  
-</div>  <img src="banner1.jpg" class="banner" alt="GOALSTORM! Banner">  <div class="panel">  
-<h1>PLAYER ENTRY TERMINAL</h1>  
-<div class="sys">INSERT USER DATA</div>  
-<input id="username" placeholder="USERNAME">  
-<input id="email" placeholder="EMAIL" disabled>  
-<select id="combo" disabled>  
-<option value="">GOALSCORER COMBINATION</option>  
-<option>Messi & Ronaldo</option>  
-<option>Neymar & Mbappé</option>  
-<option>Lewandowski & Haaland</option>  
-<option>Salah & Mané</option>  
-<option>Kane & Sterling</option>  
-<option>Modrić & De Bruyne</option>  
-<option>Mbappé & Benzema</option>  
-<option>Son & Raphinha</option>  
-<option>Haaland & De Bruyne</option>  
-<option>Vinícius & Pedri</option>  
-</select>  
-<input id="goals" placeholder="TOTAL GROUP GOALS" type="number" disabled>  
-<div class="sys" id="s1msg"></div>  
-</div>  <div class="panel">  
-<h1>GROUP STAGE</h1>  
-<div class="sys prominent">SELECT 2ND PLACE IN EACH GROUP AND SELECT 8 THIRD-PLACE QUALIFIERS</div>  
-<div class="groups-grid" id="groupsGrid"></div>  
-<div class="sys" id="groupMsg"></div>  
+</head> <body>  <div class="nav" id="nav">
+  <a href="index.html">HOME</a>
+  <a href="predict.html" class="active">PLAY</a>
+  <a href="scores.html">SCORES</a>
+  <a href="rules.html">RULES</a>
+</div>  <img src="banner1.jpg" class="banner" alt="GOALSTORM! Banner">  <div class="panel">
+<h1>PLAYER ENTRY TERMINAL</h1>
+<div class="sys">INSERT USER DATA</div>
+<input id="username" placeholder="USERNAME">
+<input id="email" placeholder="EMAIL" disabled>
+<select id="combo" disabled>
+<option value="">GOALSCORER COMBINATION</option>
+<option>Messi & Ronaldo</option>
+<option>Neymar & Mbappé</option>
+<option>Lewandowski & Haaland</option>
+<option>Salah & Mané</option>
+<option>Kane & Sterling</option>
+<option>Modrić & De Bruyne</option>
+<option>Mbappé & Benzema</option>
+<option>Son & Raphinha</option>
+<option>Haaland & De Bruyne</option>
+<option>Vinícius & Pedri</option>
+</select>
+<input id="goals" placeholder="TOTAL GROUP GOALS" type="number" disabled>
+<div class="sys" id="s1msg"></div>
+</div>  <div class="panel">
+<h1>GROUP STAGE</h1>
+<div class="sys prominent">SELECT 2ND PLACE IN EACH GROUP AND SELECT 8 THIRD-PLACE QUALIFIERS</div>
+<div class="groups-grid" id="groupsGrid"></div>
+<div class="sys" id="groupMsg"></div>
 </div>  <button id="lockBtn" disabled>LOCK PICKS & PROCEED TO RANDOM PLAYER SELECTOR</button>
 
-<div class="overlay" id="overlay">  
-  <div class="modal">  
-    <div class="top-player" id="topPlayer"></div>  
-    <div class="subtitle">is your random player. Do you want to</div>  
-    <div class="actions">  
-      <button id="stickBtn">STICK (AND SUBMIT)</button>  
-      <button id="twistBtn">TWIST (2 REMAINING)</button>  
-    </div>  
-    <div class="grid" id="grid"></div>  
-    <div class="info" id="info"></div>  
-    <div class="success" id="success">PICKS SUBMITTED!</div>  
-  </div>  
-</div>  <div class="submit-overlay" id="submitOverlay">  
-  <div class="submit-box">  
-    <h2>PICKS SUBMITTED</h2>  
-    <div class="details" id="summary"></div>  
-    <div class="hint">Take a screenshot of this screen for your records.</div>  
-    <a href="index.html">RETURN TO HOME SCREEN</a>  
-  </div>  
-</div>  <script>  
-'use strict';  
-  
-/* ---------- STAGE 1 ---------- */  
-const usernameInput=document.getElementById('username'),  
-emailInput=document.getElementById('email'),  
-comboSelect=document.getElementById('combo'),  
-goalsInput=document.getElementById('goals'),  
-s1msg=document.getElementById('s1msg'),  
-lockBtn=document.getElementById('lockBtn'),  
-nav=document.getElementById('nav');  
-  
-usernameInput.oninput=()=>{ if(usernameInput.value.length>2) emailInput.disabled=false; }  
-emailInput.oninput=()=>{ if(emailInput.value.includes('@')) comboSelect.disabled=false; }  
-comboSelect.onchange=()=>{ if(comboSelect.value) goalsInput.disabled=false; }  
-goalsInput.oninput=()=>{ if(goalsInput.value>0){ s1msg.textContent='PLAYER DATA READY — COMPLETE GROUP PICKS'; checkSubmit(); } }  
-  
-/* ---------- STAGE 2 ---------- */  
-const GROUPS=[ /* unchanged */   
-["MEXICO 🇲🇽","SOUTH AFRICA 🇿🇦","SOUTH KOREA 🇰🇷","DEN/MAC/CZE/IRL"],  
-["CANADA 🇨🇦","ITA/NIR/WAL/BOS","QATAR 🇶🇦","SWITZERLAND 🇨🇭"],  
-["BRAZIL 🇧🇷","MOROCCO 🇲🇦","HAITI 🇭🇹","SCOTLAND 🏴"],  
-["USA 🇺🇸","PARAGUAY 🇵🇾","AUSTRALIA 🇦🇺","TUR/ROU/SVK/KOS"],  
-["GERMANY 🇩🇪","CURAÇAO 🇨🇼","IVORY COAST 🇨🇮","ECUADOR 🇪🇨"],  
-["NETHERLANDS 🇳🇱","JAPAN 🇯🇵","UKR/SWE/POL/ALB","TUNISIA 🇹🇳"],  
-["BELGIUM 🇧🇪","EGYPT 🇪🇬","IRAN 🇮🇷","NEW ZEALAND 🇳🇿"],  
-["SPAIN 🇪🇸","CAPE VERDE 🇨🇻","SAUDI ARABIA 🇸🇦","URUGUAY 🇺🇾"],  
-["FRANCE 🇫🇷","SENEGAL 🇸🇳","BOL/SUR/IRQ","NORWAY 🇳🇴"],  
-["ARGENTINA 🇦🇷","ALGERIA 🇩🇿","AUSTRIA 🇦🇹","JORDAN 🇯🇴"],  
-["PORTUGAL 🇵🇹","JAM/NCL/DRC","UZBEKISTAN 🇺🇿","COLOMBIA 🇨🇴"],  
-["ENGLAND 🏴","CROATIA 🇭🇷","GHANA 🇬🇭","PANAMA 🇵🇦"]  
-];  
-  
-const letters="ABCDEFGHIJKL".split('');  
-const MAX_THIRD=8;  
-const state={ secondPicks:Array(GROUPS.length).fill(null), thirdPicks:Array(GROUPS.length).fill(null) };  
-const groupsGrid=document.getElementById('groupsGrid');  
-const groupMsg=document.getElementById('groupMsg');  
-  
-function flash(msg){ const o=groupMsg.textContent; groupMsg.textContent=msg; setTimeout(()=>groupMsg.textContent=o,1200); }  
-  
-function createGroupEl(groupIndex, teams){  
-const g=document.createElement('div'); g.className='group';  
-g.innerHTML=`<h4>GROUP ${letters[groupIndex]}</h4><div class="team-list"></div>`;  
-const list=g.querySelector('.team-list');  
-teams.forEach((team,idx)=>{  
-const row=document.createElement('div'); row.className='team-row';  
-const nameSpan=document.createElement('span'); nameSpan.className='team-name'; nameSpan.textContent=team;  
-const btn2=document.createElement('button'); btn2.className='team-btn'; btn2.textContent='2nd';  
-btn2.onclick=()=>toggleSecond(groupIndex,idx,btn2);  
-const btn3=document.createElement('button'); btn3.className='team-btn'; btn3.textContent='3rd';  
-btn3.onclick=()=>toggleThird(groupIndex,idx,btn3);  
-row.append(nameSpan,btn2,btn3); list.appendChild(row);  
-});  
-return g;  
-}  
-  
-function renderGroups(){ groupsGrid.innerHTML=''; GROUPS.forEach((g,i)=>groupsGrid.appendChild(createGroupEl(i,g))); }  
-renderGroups();  
-  
-function toggleSecond(group,i,btn){  
-if(state.thirdPicks[group]===i){ flash('Already selected as 3rd-place'); return; }  
-state.secondPicks[group]=state.secondPicks[group]===i?null:i;  
-btn.closest('.team-list').querySelectorAll('.selected-2').forEach(b=>b.classList.remove('selected-2'));  
-if(state.secondPicks[group]===i) btn.classList.add('selected-2');  
-checkSubmit();  
-}  
-  
-function toggleThird(group,i,btn){  
-if(state.secondPicks[group]===i){ flash('Already selected as 2nd-place'); return; }  
-const total=state.thirdPicks.filter(x=>x!==null).length;  
-if(state.thirdPicks[group]===i){ state.thirdPicks[group]=null; btn.classList.remove('selected-3'); }  
-else{  
-if(total>=MAX_THIRD){ flash('Already 8 third-place teams selected'); return; }  
-btn.closest('.team-list').querySelectorAll('.selected-3').forEach(b=>b.classList.remove('selected-3'));  
-state.thirdPicks[group]=i; btn.classList.add('selected-3');  
-}  
-checkSubmit();  
-}  
-  
-function checkSubmit(){  
-const allFilled=usernameInput.value && emailInput.value && comboSelect.value && goalsInput.value;  
-const secondComplete=state.secondPicks.every(x=>x!==null);  
-const thirdComplete=state.thirdPicks.filter(x=>x!==null).length===MAX_THIRD;  
-lockBtn.disabled=!(allFilled && secondComplete && thirdComplete);  
-}  
-  
-/* ---------- RANDOM SELECTOR LOGIC ---------- */  
-const PLAYERS=['MESSI','RONALDO','MBAPPÉ','HAALAND','SALAH','KANE','NEYMAR','BENZEMA','MODRIĆ','DE BRUYNE','VINÍCIUS','PEDRI','GRIEZMANN','BELLINGHAM','LEWANDOWSKI','SON','OSIMHEN','SAKA','RASHFORD','ALVAREZ','GREALISH','FODEN','ØDEGAARD','MUSIALA','KVARA','VALVERDE','DIMARIA','LUKAKU','DAVIES','RODRI'];  
-let twistsRemaining=2, finalPlayer=null, finalIndex=null, locked=false;  
-  
-// Palette of possible neon colors for the cycle  
-const NEON_COLORS = ['#00F6FF', '#FF2FC7', '#22FF88', '#FFD60A', '#B026FF', '#FF5E00'];  
-  
-const overlay=document.getElementById('overlay'),  
-gridEl=document.getElementById('grid'),  
-topPlayerEl=document.getElementById('topPlayer'),  
-stickBtn=document.getElementById('stickBtn'),  
-twistBtn=document.getElementById('twistBtn'),  
-submitOverlay=document.getElementById('submitOverlay'),  
-summaryEl=document.getElementById('summary');  
-  
-lockBtn.onclick=()=>{ nav.style.display='none'; overlay.style.display='flex'; initRandomPlayer(); };  
-  
-function initRandomPlayer(){  
-gridEl.innerHTML=''; twistsRemaining=2; locked=false;  
-// Create grid  
-PLAYERS.forEach(n=>{ const d=document.createElement('div'); d.className='player-box'; d.textContent=n; gridEl.appendChild(d); });  
-  
-// Pick initial instantly  
-finalIndex=Math.floor(Math.random()*PLAYERS.length);  
-finalPlayer=PLAYERS[finalIndex];  
-topPlayerEl.textContent=finalPlayer;  
-  
-// Highlight in grid instantly  
-const boxes=document.querySelectorAll('.player-box');  
-boxes[finalIndex].classList.add('selected');  
-updateTwistText();  
-}  
-  
-function updateTwistText(){ twistBtn.textContent=`TWIST (${twistsRemaining} REMAINING)`; }  
-  
-function countdownThen(cb){  
-let i=0,msg=['READY','SET','TWIST!'];  
-const t=setInterval(()=>{ topPlayerEl.textContent=msg[i++]; if(i===msg.length){ clearInterval(t); cb(); }},250);  
-}  
-  
-stickBtn.onclick=()=>{ if(locked) return; locked=true; freezeFrame(); showSummary(); };  
-  
-twistBtn.onclick=()=>{  
-  if(locked||twistsRemaining===0) return;  
-  twistsRemaining--; updateTwistText();  
-  
-  // Clean grid for animation (remove selected class and clear inline styles)  
-  document.querySelectorAll('.player-box').forEach(b=>{  
-    b.classList.remove('selected','active');  
-    b.style='';  
-  });  
-  
-  // Decide winner  
-  finalIndex=Math.floor(Math.random()*PLAYERS.length);  
-  finalPlayer=PLAYERS[finalIndex];  
-  
-  // Run  
-  countdownThen(()=>runTwistAnimation(()=>{  
-    topPlayerEl.textContent=finalPlayer;   
-    if(twistsRemaining===0){ locked=true; freezeFrame(); showSummary(); }  
-  }));  
-};  
-  
-function runTwistAnimation(done){  
-  const boxes = document.querySelectorAll('.player-box');  
-  let current = 0;  
-  let loops = 0;  
-  const maxLoops = 2; // Number of full cycles around the grid  
-  
-  const interval = setInterval(() => {  
-    // Reset previous styles completely  
-    boxes.forEach(b => {  
-      b.classList.remove('active');  
-      b.style = ''; // Clear inline colors  
-    });  
-      
-    // Pick a random neon color  
-    const randomColor = NEON_COLORS[Math.floor(Math.random() * NEON_COLORS.length)];  
-  
-    // Light up current with dynamic color  
-    const b = boxes[current];  
-    b.classList.add('active');  
-    b.style.background = randomColor;  
-    b.style.borderColor = randomColor;  
-    b.style.boxShadow = `0 0 15px ${randomColor}`;  
-    b.style.color = '#000'; // Black text for contrast on neon  
-      
-    // Update text to match lighting box  
-    topPlayerEl.textContent = b.textContent;  
-  
-    // Check if done  
-    if(loops >= maxLoops && current === finalIndex) {  
-      clearInterval(interval);  
-      // Clean inline styles so the .selected class (gold) takes over  
-      b.style = '';  
-      b.classList.remove('active');  
-      b.classList.add('selected');  
-      done();  
-    } else {  
-      current++;  
-      if(current >= boxes.length) {  
-        current = 0;  
-        loops++;  
-      }  
-    }  
-  }, 50); // Speed of cycle  
-}  
-  
-function freezeFrame(){ topPlayerEl.classList.add('shake'); setTimeout(()=>topPlayerEl.classList.remove('shake'),350); }  
-  
-function showSummary(){  
-setTimeout(()=>{  
-  overlay.style.display='none';  
-  
-  const players=[...comboSelect.value.split('&').map(p=>p.trim().toUpperCase()),finalPlayer.toUpperCase()];  
-  
-  let html=`<div class="summary-header">USER: ${usernameInput.value}<br>EMAIL: ${emailInput.value}</div>`;  
-  html+=`<div class="summary-players">PLAYERS: ${players.join(', ')}</div>`;  
-  html+=`<div class="summary-grid">`;  
-    
-  GROUPS.forEach((g,i)=>{  
-    html+=`<div class="summary-item">`;  
-    html+=`<h5>GROUP ${letters[i]}</h5>`;  
-    html+=`<span>2ND: ${g[state.secondPicks[i]]}</span>`;  
-    if(state.thirdPicks[i]!==null){  
-       html+=`<span class="third">3RD: ${g[state.thirdPicks[i]]}</span>`;  
-    }  
-    html+=`</div>`;  
-  });  
-  
-  html+=`</div>`;  
-    
-  summaryEl.innerHTML=html;  
-  submitOverlay.style.display='flex';  
-}, 800);  
-}  
-</script>  </body>  
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="top-player" id="topPlayer"></div>
+    <div class="subtitle">is your random player. Do you want to</div>
+    <div class="actions">
+      <button id="stickBtn">STICK (AND SUBMIT)</button>
+      <button id="twistBtn">TWIST (2 REMAINING)</button>
+    </div>
+    <div class="grid" id="grid"></div>
+    <div class="info" id="info"></div>
+    <div class="success" id="success">PICKS SUBMITTED!</div>
+  </div>
+</div>  <div class="submit-overlay" id="submitOverlay">
+  <div class="submit-box">
+    <h2>PICKS SUBMITTED</h2>
+    <div class="details" id="summary"></div>
+    <div class="hint">Take a screenshot of this screen for your records.</div>
+    <a href="index.html">RETURN TO HOME SCREEN</a>
+  </div>
+</div>  <script>
+'use strict';
+
+/* ---------- STAGE 1 ---------- */
+const usernameInput=document.getElementById('username'),
+emailInput=document.getElementById('email'),
+comboSelect=document.getElementById('combo'),
+goalsInput=document.getElementById('goals'),
+s1msg=document.getElementById('s1msg'),
+lockBtn=document.getElementById('lockBtn'),
+nav=document.getElementById('nav');
+
+usernameInput.oninput=()=>{ if(usernameInput.value.length>2) emailInput.disabled=false; }
+emailInput.oninput=()=>{ if(emailInput.value.includes('@')) comboSelect.disabled=false; }
+comboSelect.onchange=()=>{ if(comboSelect.value) goalsInput.disabled=false; }
+goalsInput.oninput=()=>{ if(goalsInput.value>0){ s1msg.textContent='PLAYER DATA READY — COMPLETE GROUP PICKS'; checkSubmit(); } }
+
+/* ---------- STAGE 2 ---------- */
+const GROUPS=[ /* unchanged */
+["MEXICO 🇲🇽","SOUTH AFRICA 🇿🇦","SOUTH KOREA 🇰🇷","DEN/MAC/CZE/IRL"],
+["CANADA 🇨🇦","ITA/NIR/WAL/BOS","QATAR 🇶🇦","SWITZERLAND 🇨🇭"],
+["BRAZIL 🇧🇷","MOROCCO 🇲🇦","HAITI 🇭🇹","SCOTLAND 🏴"],
+["USA 🇺🇸","PARAGUAY 🇵🇾","AUSTRALIA 🇦🇺","TUR/ROU/SVK/KOS"],
+["GERMANY 🇩🇪","CURAÇAO 🇨🇼","IVORY COAST 🇨🇮","ECUADOR 🇪🇨"],
+["NETHERLANDS 🇳🇱","JAPAN 🇯🇵","UKR/SWE/POL/ALB","TUNISIA 🇹🇳"],
+["BELGIUM 🇧🇪","EGYPT 🇪🇬","IRAN 🇮🇷","NEW ZEALAND 🇳🇿"],
+["SPAIN 🇪🇸","CAPE VERDE 🇨🇻","SAUDI ARABIA 🇸🇦","URUGUAY 🇺🇾"],
+["FRANCE 🇫🇷","SENEGAL 🇸🇳","BOL/SUR/IRQ","NORWAY 🇳🇴"],
+["ARGENTINA 🇦🇷","ALGERIA 🇩🇿","AUSTRIA 🇦🇹","JORDAN 🇯🇴"],
+["PORTUGAL 🇵🇹","JAM/NCL/DRC","UZBEKISTAN 🇺🇿","COLOMBIA 🇨🇴"],
+["ENGLAND 🏴","CROATIA 🇭🇷","GHANA 🇬🇭","PANAMA 🇵🇦"]
+];
+
+const letters="ABCDEFGHIJKL".split('');
+const MAX_THIRD=8;
+const state={ secondPicks:Array(GROUPS.length).fill(null), thirdPicks:Array(GROUPS.length).fill(null) };
+const groupsGrid=document.getElementById('groupsGrid');
+const groupMsg=document.getElementById('groupMsg');
+
+function flash(msg){ const o=groupMsg.textContent; groupMsg.textContent=msg; setTimeout(()=>groupMsg.textContent=o,1200); }
+
+function createGroupEl(groupIndex, teams){
+const g=document.createElement('div'); g.className='group';
+g.innerHTML=`<h4>GROUP ${letters[groupIndex]}</h4><div class="team-list"></div>`;
+const list=g.querySelector('.team-list');
+teams.forEach((team,idx)=>{
+const row=document.createElement('div'); row.className='team-row';
+const nameSpan=document.createElement('span'); nameSpan.className='team-name'; nameSpan.textContent=team;
+const btn2=document.createElement('button'); btn2.className='team-btn'; btn2.textContent='2nd';
+btn2.onclick=()=>toggleSecond(groupIndex,idx,btn2);
+const btn3=document.createElement('button'); btn3.className='team-btn'; btn3.textContent='3rd';
+btn3.onclick=()=>toggleThird(groupIndex,idx,btn3);
+row.append(nameSpan,btn2,btn3); list.appendChild(row);
+});
+return g;
+}
+
+function renderGroups(){ groupsGrid.innerHTML=''; GROUPS.forEach((g,i)=>groupsGrid.appendChild(createGroupEl(i,g))); }
+renderGroups();
+
+function toggleSecond(group,i,btn){
+if(state.thirdPicks[group]===i){ flash('Already selected as 3rd-place'); return; }
+state.secondPicks[group]=state.secondPicks[group]===i?null:i;
+btn.closest('.team-list').querySelectorAll('.selected-2').forEach(b=>b.classList.remove('selected-2'));
+if(state.secondPicks[group]===i) btn.classList.add('selected-2');
+checkSubmit();
+}
+
+function toggleThird(group,i,btn){
+if(state.secondPicks[group]===i){ flash('Already selected as 2nd-place'); return; }
+const total=state.thirdPicks.filter(x=>x!==null).length;
+if(state.thirdPicks[group]===i){ state.thirdPicks[group]=null; btn.classList.remove('selected-3'); }
+else{
+if(total>=MAX_THIRD){ flash('Already 8 third-place teams selected'); return; }
+btn.closest('.team-list').querySelectorAll('.selected-3').forEach(b=>b.classList.remove('selected-3'));
+state.thirdPicks[group]=i; btn.classList.add('selected-3');
+}
+checkSubmit();
+}
+
+function checkSubmit(){
+const allFilled=usernameInput.value && emailInput.value && comboSelect.value && goalsInput.value;
+const secondComplete=state.secondPicks.every(x=>x!==null);
+const thirdComplete=state.thirdPicks.filter(x=>x!==null).length===MAX_THIRD;
+lockBtn.disabled=!(allFilled && secondComplete && thirdComplete);
+}
+
+/* ---------- RANDOM SELECTOR LOGIC ---------- */
+const PLAYERS=['MESSI','RONALDO','MBAPPÉ','HAALAND','SALAH','KANE','NEYMAR','BENZEMA','MODRIĆ','DE BRUYNE','VINÍCIUS','PEDRI','GRIEZMANN','BELLINGHAM','LEWANDOWSKI','SON','OSIMHEN','SAKA','RASHFORD','ALVAREZ','GREALISH','FODEN','ØDEGAARD','MUSIALA','KVARA','VALVERDE','DIMARIA','LUKAKU','DAVIES','RODRI'];
+let twistsRemaining=2, finalPlayer=null, finalIndex=null, locked=false;
+
+// Palette of possible neon colors for the cycle
+const NEON_COLORS = ['#00F6FF', '#FF2FC7', '#22FF88', '#FFD60A', '#B026FF', '#FF5E00'];
+
+const overlay=document.getElementById('overlay'),
+gridEl=document.getElementById('grid'),
+topPlayerEl=document.getElementById('topPlayer'),
+stickBtn=document.getElementById('stickBtn'),
+twistBtn=document.getElementById('twistBtn'),
+submitOverlay=document.getElementById('submitOverlay'),
+summaryEl=document.getElementById('summary');
+
+lockBtn.onclick=()=>{ nav.style.display='none'; overlay.style.display='flex'; initRandomPlayer(); };
+
+function initRandomPlayer(){
+gridEl.innerHTML=''; twistsRemaining=2; locked=false;
+// Create grid
+PLAYERS.forEach(n=>{ const d=document.createElement('div'); d.className='player-box'; d.textContent=n; gridEl.appendChild(d); });
+
+// Pick initial instantly
+finalIndex=Math.floor(Math.random()*PLAYERS.length);
+finalPlayer=PLAYERS[finalIndex];
+topPlayerEl.textContent=finalPlayer;
+
+// Highlight in grid instantly
+const boxes=document.querySelectorAll('.player-box');
+boxes[finalIndex].classList.add('selected');
+updateTwistText();
+}
+
+function updateTwistText(){ twistBtn.textContent=`TWIST (${twistsRemaining} REMAINING)`; }
+
+function countdownThen(cb){
+let i=0,msg=['READY','SET','TWIST!'];
+const t=setInterval(()=>{ topPlayerEl.textContent=msg[i++]; if(i===msg.length){ clearInterval(t); cb(); }},250);
+}
+
+stickBtn.onclick=()=>{ if(locked) return; locked=true; freezeFrame(); showSummary(); };
+
+twistBtn.onclick=()=>{
+  if(locked||twistsRemaining===0) return;
+  twistsRemaining--; updateTwistText();
+
+  // Clean grid for animation (remove selected class and clear inline styles)
+  document.querySelectorAll('.player-box').forEach(b=>{
+    b.classList.remove('selected','active');
+    b.style='';
+  });
+
+  // Decide winner
+  finalIndex=Math.floor(Math.random()*PLAYERS.length);
+  finalPlayer=PLAYERS[finalIndex];
+
+  // Run
+  countdownThen(()=>runTwistAnimation(()=>{
+    topPlayerEl.textContent=finalPlayer;
+    if(twistsRemaining===0){ locked=true; freezeFrame(); showSummary(); }
+  }));
+};
+
+function runTwistAnimation(done){
+  const boxes = document.querySelectorAll('.player-box');
+  let current = 0;
+  let loops = 0;
+  const maxLoops = 2; // Number of full cycles around the grid
+
+  const interval = setInterval(() => {
+    // Reset previous styles completely
+    boxes.forEach(b => {
+      b.classList.remove('active');
+      b.style = ''; // Clear inline colors
+    });
+
+    // Pick a random neon color
+    const randomColor = NEON_COLORS[Math.floor(Math.random() * NEON_COLORS.length)];
+
+    // Light up current with dynamic color
+    const b = boxes[current];
+    b.classList.add('active');
+    b.style.background = randomColor;
+    b.style.borderColor = randomColor;
+    b.style.boxShadow = `0 0 15px ${randomColor}`;
+    b.style.color = '#000'; // Black text for contrast on neon
+
+    // Update text to match lighting box
+    topPlayerEl.textContent = b.textContent;
+
+    // Check if done
+    if(loops >= maxLoops && current === finalIndex) {
+      clearInterval(interval);
+      // Clean inline styles so the .selected class (gold) takes over
+      b.style = '';
+      b.classList.remove('active');
+      b.classList.add('selected');
+      done();
+    } else {
+      current++;
+      if(current >= boxes.length) {
+        current = 0;
+        loops++;
+      }
+    }
+  }, 50); // Speed of cycle
+}
+
+function freezeFrame(){ topPlayerEl.classList.add('shake'); setTimeout(()=>topPlayerEl.classList.remove('shake'),350); }
+
+/* ---------- SUBMIT FUNCTION ---------- */
+function showSummary(){
+  setTimeout(()=>{
+    overlay.style.display='none';
+
+    // 1. Gather Data for Sheet
+    const payload = {
+        username: usernameInput.value,
+        email: emailInput.value,
+        combo: comboSelect.value,
+        randomPlayer: finalPlayer,
+        totalGoals: goalsInput.value,
+        groupDetails: GROUPS.map((g, i) => ({
+            second: g[state.secondPicks[i]], // Send team name
+            third: state.thirdPicks[i] !== null ? g[state.thirdPicks[i]] : ""
+        }))
+    };
+
+    // 2. Send Data via Fetch
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz7q6fBJI8f-14HT_hLThdov_Ao1jm7_Auw2wpua-ZJjuEhDNb2KyRs0cJDytZw2P-IqQ/exec";
+
+    fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors', // Important for browser/sheet connectivity
+        cache: 'no-cache',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload)
+    }).then(() => {
+        console.log("Data successfully sent to Google Sheet.");
+    }).catch(err => console.error("Error sending data:", err));
+
+    // 3. Render Final UI (Original Code)
+    const players=[...comboSelect.value.split('&').map(p=>p.trim().toUpperCase()),finalPlayer.toUpperCase()];
+
+    let html=`<div class="summary-header">USER: ${usernameInput.value}<br>EMAIL: ${emailInput.value}</div>`;
+    html+=`<div class="summary-players">PLAYERS: ${players.join(', ')}</div>`;
+    html+=`<div class="summary-grid">`;
+
+    GROUPS.forEach((g,i)=>{
+      html+=`<div class="summary-item">`;
+      html+=`<h5>GROUP ${letters[i]}</h5>`;
+      html+=`<span>2ND: ${g[state.secondPicks[i]]}</span>`;
+      if(state.thirdPicks[i]!==null){
+         html+=`<span class="third">3RD: ${g[state.thirdPicks[i]]}</span>`;
+      }
+      html+=`</div>`;
+    });
+
+    html+=`</div>`;
+
+    summaryEl.innerHTML=html;
+    submitOverlay.style.display='flex';
+  }, 800);
+}
+</script> </body>
 </html>
