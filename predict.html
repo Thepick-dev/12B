@@ -168,10 +168,12 @@ button:disabled{opacity:.35;border-color:var(--dim);color:var(--dim);cursor:not-
     cursor: pointer;
     text-align: left;
     line-height: 1.4;
+    flex-wrap: nowrap;
 }
 .terms-container .required-text {
     color: var(--pink);
     font-weight: bold;
+    white-space: nowrap;
 }
 .terms-container input[type="checkbox"] {
     width: auto;
@@ -319,18 +321,14 @@ button:disabled{opacity:.35;border-color:var(--dim);color:var(--dim);cursor:not-
   <a href="rules.html">RULES</a>
 </div>  <img src="banner1.jpg" class="banner" alt="GOALSTORM! Banner">  <div class="panel">
 <h1>PLAYER ENTRY TERMINAL</h1>
-<label class="input-label">USERNAME</label>
 <input id="username" placeholder="USERNAME">
-<label class="input-label">EMAIL</label>
 <input id="email" placeholder="EMAIL" disabled>
 <div class="terms-container">
     <label><input type="checkbox" id="privacyCheck"> <span class="required-text">*REQUIRED:</span> I AGREE TO PRIVACY POLICY</label>
     <label><input type="checkbox" id="termsCheck"> <span class="required-text">*REQUIRED:</span> I AGREE TO TERMS OF USE</label>
     <label><input type="checkbox" id="marketingCheck"> I WANT TO HEAR ABOUT FUTURE GOALSTORM COMPETITIONS (OPTIONAL)</label>
 </div>
-<label class="input-label">LEAGUE PIN (OPTIONAL)</label>
 <input id="leaguePin" placeholder="LEAGUE PIN (OPTIONAL)">
-<label class="input-label">GOALSCORER COMBINATION</label>
 <select id="combo" disabled>
 <option value="">GOALSCORER COMBINATION</option>
 <option>Messi & Ronaldo</option>
