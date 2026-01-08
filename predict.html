@@ -81,9 +81,16 @@ h1{
     line-height: 1.4;
 }
 
+/* UPDATED TEXT STYLING PER REQUEST */
 .sys{margin:12px 0;font-size:12px;color:var(--warn);line-height:1.8;}
-.sys.prominent{font-size:14px;color:var(--yellow);text-shadow:2px 2px 0 #000;}
-.sys.intro{font-size:12px;color:var(--white);margin-bottom:5px;}
+
+.sys.prominent, .sys.intro {
+    color: var(--white); /* White text */
+    font-size: 14px; /* Larger font size */
+    text-shadow: 2px 2px 0 #000;
+    line-height: 1.6;
+}
+.sys.intro { margin-bottom: 10px; }
 
 /* BANNER */
 .banner {
@@ -94,31 +101,34 @@ h1{
   margin-bottom: 20px;
 }
 
-/* INPUTS */
+/* INPUTS - INCREASED VISIBILITY & CONSISTENCY */
 input, select{
     width:100%;
     padding:14px;
     margin:12px 0;
-    background:#111;
+    background:#222; /* Slightly lighter background for visibility */
     color:#fff;
-    border:2px solid #555;
+    border:2px solid #777; /* More visible border */
     font-family:inherit;
     font-size:12px;
     outline: none;
     opacity: 1; /* Force visible */
 }
-input::placeholder { color: #888; }
+input::placeholder { color: #aaa; } /* Brighter placeholder text */
+
 input:focus, select:focus {
     border-color: var(--neon);
     background: #000;
     box-shadow: 0 0 8px rgba(0,246,255,0.4);
 }
-/* Ensure disabled inputs are visible per request */
+
+/* Ensure disabled inputs look exactly like active ones (consistent) */
 input:disabled, select:disabled{
     opacity: 1; 
-    border-color: #555;
-    background: #111;
+    border-color: #777;
+    background: #222;
     cursor: not-allowed;
+    color: #fff;
 }
 
 button{
@@ -161,8 +171,8 @@ button:disabled{opacity:.35;border-color:var(--dim);color:var(--dim);cursor:not-
 .terms-container {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    margin: 10px 0;
+    gap: 15px; /* Increased gap for better spacing */
+    margin: 15px 0;
     align-items: flex-start;
     padding-left: 5px;
 }
@@ -174,12 +184,14 @@ button:disabled{opacity:.35;border-color:var(--dim);color:var(--dim);cursor:not-
     gap: 10px;
     cursor: pointer;
     text-align: left;
+    line-height: 1.4;
 }
 .terms-container input[type="checkbox"] {
     width: auto;
     margin: 0;
     transform: scale(1.5);
     cursor: pointer;
+    border: 2px solid #777; /* Match input style */
 }
 
 /* ARCADE POPUP (ERROR & PROGRESS) */
@@ -307,6 +319,7 @@ button:disabled{opacity:.35;border-color:var(--dim);color:var(--dim);cursor:not-
 <div class="terms-container">
     <label><input type="checkbox" id="privacyCheck"> I AGREE TO PRIVACY POLICY</label>
     <label><input type="checkbox" id="termsCheck"> I AGREE TO TERMS OF USE</label>
+    <label><input type="checkbox" id="marketingCheck"> I WANT TO HEAR ABOUT FUTURE GOALSTORM COMPETITIONS (OPTIONAL)</label>
 </div>
 
 <input id="leaguePin" placeholder="LEAGUE PIN (OPTIONAL)">
@@ -324,7 +337,7 @@ button:disabled{opacity:.35;border-color:var(--dim);color:var(--dim);cursor:not-
 <option>Haaland & De Bruyne</option>
 <option>Vinícius & Pedri</option>
 </select>
-<input id="goals" placeholder="TOTAL GROUP GOALS" type="number" disabled>
+<input id="goals" placeholder="TOTAL GROUP STAGE GOALS" type="number" disabled>
 <div class="sys" id="s1msg"></div>
 </div>  <div class="panel">
 <h1>GROUP STAGE</h1>
@@ -370,6 +383,7 @@ const usernameInput=document.getElementById('username'),
 emailInput=document.getElementById('email'),
 privacyCheck=document.getElementById('privacyCheck'),
 termsCheck=document.getElementById('termsCheck'),
+marketingCheck=document.getElementById('marketingCheck'),
 leaguePinInput=document.getElementById('leaguePin'),
 comboSelect=document.getElementById('combo'),
 goalsInput=document.getElementById('goals'),
@@ -384,6 +398,8 @@ if(emailInput.value.includes('@')) comboSelect.disabled=false; checkSubmit(); }
 
 privacyCheck.onchange=checkSubmit;
 termsCheck.onchange=checkSubmit;
+// Marketing check is optional, doesn't trigger checkSubmit logic but we can leave it bound if needed
+marketingCheck.onchange=checkSubmit; 
 
 comboSelect.onchange=()=>{ if(comboSelect.value)
 goalsInput.disabled=false; checkSubmit(); }
@@ -485,20 +501,21 @@ const total=state.thirdPicks.filter(x=>x!==null).length;
 if(state.thirdPicks[group]===i){
     state.thirdPicks[group]=null; 
     btn.classList.remove('selected-3'); 
-    // Show progress on deselect too? Maybe not needed, but keeps user informed
     const newTotal = state.thirdPicks.filter(x=>x!==null).length;
-    showPopup(`${newTotal} SELECTED, ${MAX_THIRD - newTotal} REMAINING`, true, newTotal);
+    // Updated Popup Text per request
+    showPopup(`${newTotal} THIRD-PLACE TEAMS SELECTED, ${MAX_THIRD - newTotal} REMAINING`, true, newTotal);
 }
 else{
     // Selecting
-    if(total>=MAX_THIRD){ showPopup('ERROR: Already 8 third-place teams selected'); return; }
+    if(total>=MAX_THIRD){ showPopup('ERROR: YOU HAVE ALREADY SELECTED 8 THIRD-PLACE QUALIFIERS'); return; }
     btn.closest('.team-list').querySelectorAll('.selected-3').forEach(b=>b.classList.remove('selected-3'));
     state.thirdPicks[group]=i; 
     btn.classList.add('selected-3');
     
     // Trigger Progress Popup
     const newTotal = state.thirdPicks.filter(x=>x!==null).length;
-    showPopup(`${newTotal} SELECTED, ${MAX_THIRD - newTotal} REMAINING`, true, newTotal);
+    // Updated Popup Text per request
+    showPopup(`${newTotal} THIRD-PLACE TEAMS SELECTED, ${MAX_THIRD - newTotal} REMAINING`, true, newTotal);
 }
 checkSubmit();
 }
@@ -508,6 +525,7 @@ const allFilled=usernameInput.value && emailInput.value && comboSelect.value && 
 const termsAgreed = privacyCheck.checked && termsCheck.checked;
 const secondComplete=state.secondPicks.every(x=>x!==null);
 const thirdComplete=state.thirdPicks.filter(x=>x!==null).length===MAX_THIRD;
+// Marketing check is NOT included here as it is optional
 lockBtn.disabled=!(allFilled && termsAgreed && secondComplete && thirdComplete);
 }
 
@@ -638,7 +656,8 @@ function showSummary(){
     const payload = {
         username: usernameInput.value,
         email: emailInput.value,
-        leaguePin: leaguePinInput.value, // Added League Pin
+        leaguePin: leaguePinInput.value,
+        marketing: marketingCheck.checked, // Added Marketing Check
         combo: comboSelect.value,
         randomPlayer: finalPlayer,
         totalGoals: goalsInput.value,
