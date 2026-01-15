@@ -2,420 +2,216 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <title>GOALSURGE! — HOME</title>
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
 <style>
+/* --- 1. CORE PALETTE: HOT ARCADE (VERSION 2 MATCH) --- */
 :root{
-  --bg:#050510;
-  --panel:#0b0b1f; 
-  --neon:#00f6ff; 
-  --ok:#22ff88; 
-  --warn:#ffcc00; 
-  --dim:#666;
-  --cyan:#00F6FF;
-  --yellow:#FFD60A; 
-  --pink:#FF2FC7; 
-  --white:#F7F7F2;
+  --bg: #0f0e17;          
+  --panel: #1a1a2e;       
+  --neon-pink: #ff2a6d;   /* ACTION */
+  --neon-cyan: #05d9e8;   /* STRUCTURE */
+  --neon-yellow: #ffc800; /* DATA */
+  --text-main: #d1d1d1;
 }
-*{box-sizing:border-box;margin:0;padding:0;}
-body{margin:0;background:radial-gradient(circle at top,#0c0c2a,#000);color:#e8faff;font-family:"Press Start 2P",monospace;text-align:center;display:flex;flex-direction:column;align-items:center;min-height:100vh;}
 
-/* LAUNCH SCREEN */
+*{box-sizing:border-box;margin:0;padding:0;}
+
+body{
+    margin:0;
+    background-color: var(--bg);
+    background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 20px 20px;
+    color: var(--text-main);
+    font-family:"VT323", monospace;
+    font-size: 20px; 
+    text-align:center;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    min-height: 100vh;
+    padding-bottom: 60px;
+}
+
+/* --- 2. LAUNCH SCREEN (ADAPTED TO V2 STYLE) --- */
 #launch-screen {
- position:fixed;inset:0;background:#000;display:flex;flex-direction:column;justify-content:center;align-items:center;z-index:9999;cursor:pointer;
+ position:fixed; inset:0; 
+ background-color: var(--bg);
+ background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+ background-size: 20px 20px;
+ display:flex; flex-direction:column; justify-content:center; align-items:center; 
+ z-index:9999; cursor:pointer;
 }
 #launch-screen h1{
- font-size:28px;color:var(--cyan);text-shadow:0 0 8px var(--cyan),0 0 20px var(--cyan);margin-bottom:20px;
+ font-family: "Press Start 2P", cursive;
+ font-size: 40px; color: var(--neon-yellow);
+ text-shadow: 4px 4px 0px var(--neon-pink), -3px -3px 0px var(--neon-cyan);
+ margin-bottom: 40px;
 }
 #press-enter{
- font-size:12px;color:#fff;text-shadow:0 0 4px #fff;animation:blink 1s infinite;
+ font-family: "Press Start 2P", cursive;
+ font-size: 14px; color: #fff; background: var(--neon-pink);
+ padding: 15px; box-shadow: 4px 4px 0 #000;
+ animation: blink 1s infinite;
 }
 @keyframes blink{0%,50%,100%{opacity:1;}25%,75%{opacity:0;}}
 
-/* NAV - UPDATED TO VERSION 2 STYLE (PINK ACTIVE) */
+/* --- 3. HEADER & GLITCH --- */
+.hero-section {
+    width: 100%; max-width: 960px; padding: 30px 0; margin-bottom: 20px;
+    border-bottom: 4px solid var(--neon-cyan);
+    background: linear-gradient(180deg, rgba(5, 217, 232, 0) 0%, rgba(5, 217, 232, 0.1) 100%);
+    position: relative; overflow: hidden;
+    text-align: center; opacity: 0; transition: opacity 0.8s ease;
+}
+.scanlines {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1));
+    background-size: 100% 4px; pointer-events: none; z-index: 2;
+}
+.glitch {
+    font-family: "Press Start 2P", cursive; font-size: 40px; 
+    color: var(--neon-yellow);
+    text-shadow: 4px 4px 0px var(--neon-pink), -3px -3px 0px var(--neon-cyan);
+    text-transform: uppercase; margin: 0; line-height: 1; letter-spacing: -2px;
+}
+.hero-sub {
+    font-family: "Press Start 2P", cursive; font-size: 10px; color: #fff;
+    margin-top: 15px; letter-spacing: 3px; background: var(--neon-pink);
+    padding: 6px 12px; display: inline-block; box-shadow: 4px 4px 0 #000;
+}
+
+/* --- 4. NAV & BUTTONS --- */
 .nav {
-  width: 100%;
-  max-width: 800px;
-  display: flex;
-  justify-content: space-around;
-  margin: 16px auto 10px;
-  padding: 0 10px;
-  gap: 6px;
-  opacity: 0;
-  transition: opacity 0.8s ease;
+  width: 100%; max-width: 960px; display: flex; gap: 10px; padding: 10px; margin-top: 10px;
+  opacity: 0; transition: opacity 0.8s ease;
 }
-
 .nav a {
-  flex: 1;
-  font-size: 10px;
-  padding: 12px 4px;
-  color: #567; /* V2 Style */
-  text-decoration: none;
-  border: 1px solid rgba(0,246,255,.25); /* V2 Style */
-  box-shadow: 0 0 6px rgba(0,246,255,.1); /* V2 Style */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  transition: all 0.2s;
-  background: transparent;
+  flex: 1; font-family: "Press Start 2P", cursive; font-size: 10px; padding: 12px 5px;
+  color: var(--neon-cyan); text-decoration: none; background: #111;
+  border: 2px solid var(--neon-cyan); box-shadow: 4px 4px 0px 0px rgba(5, 217, 232, 0.4);
+  text-transform: uppercase; transition: all 0.1s; display: flex; align-items: center; justify-content: center;
+}
+.nav a.active { background: var(--neon-pink); border-color: var(--neon-pink); color: #fff; }
+
+button {
+    font-family: "Press Start 2P", cursive; font-size: 14px; padding: 15px 20px; margin: 10px 0;
+    color: #fff; background: var(--neon-pink); border: 2px solid #fff;
+    box-shadow: 4px 4px 0px #000; cursor: pointer; transition: all 0.05s; text-transform: uppercase;
+}
+button:hover { background: #ff5c8d; transform: translate(-2px, -2px); box-shadow: 6px 6px 0px #000; }
+button:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px #000; }
+button:disabled { opacity: 0.5; cursor: not-allowed; background: #333; border-color: #555; box-shadow: none; transform: none; }
+
+.close-btn { 
+    position: absolute; top: 10px; right: 10px; 
+    font-size: 12px; padding: 5px 10px; background: #000; 
+    border: 2px solid var(--neon-cyan); color: var(--neon-cyan); box-shadow: none;
+}
+.close-btn:hover { background: #111; color: var(--neon-pink); border-color: var(--neon-pink); transform: none; box-shadow: none; }
+
+/* --- 5. PANELS & INPUTS --- */
+.panel {
+    width: 95%; max-width: 960px; background: var(--panel);
+    border: 3px solid var(--neon-cyan); padding: 20px; margin-bottom: 25px;
+    box-shadow: 0 0 20px rgba(5, 217, 232, 0.1);
+    opacity: 0; transition: opacity 1s ease;
+}
+h1 {
+    font-family: "Press Start 2P", cursive; font-size: 16px; margin-bottom: 20px;
+    color: var(--neon-cyan); border-bottom: 4px solid #000; padding-bottom: 10px; text-align: left;
+}
+.intro-text {
+    font-family: "VT323", monospace; font-size: 22px; color: #fff; margin-bottom: 20px; line-height: 1.4;
 }
 
-.nav a:hover { color: var(--cyan); }
+.banner { width: 100%; max-width: 100%; border: 2px solid #000; margin-bottom: 20px; display: block; }
 
-/* PINK LIT VERSION OF V2 HEADER */
-.nav a.active { 
-  color: var(--white); 
-  background: var(--pink); 
-  border: 2px solid var(--white); 
-  box-shadow: 0 0 15px var(--pink); 
-  text-shadow: 2px 2px 0px #000;
+/* INPUT STYLING */
+input, select {
+    width: 100%; padding: 15px; margin: 10px 0; 
+    background: #000; color: var(--neon-yellow); border: 2px solid #888;
+    font-family: "VT323", monospace; font-size: 24px; outline: none; text-transform: uppercase;
+    transition: all 0.3s;
 }
+::placeholder { color: var(--neon-yellow); opacity: 1; }
+input:focus::placeholder { color: transparent; }
+input:focus { border-color: var(--neon-yellow); }
 
-.banner{max-width:100%;height:auto;display:block;margin-bottom:20px;opacity:0;transition:opacity 1s ease;}
-.panel{width:100%;max-width:960px;background:var(--panel);border:2px solid var(--neon);box-shadow:0 0 18px rgba(0,246,255,.28);padding:30px 20px;margin-bottom:20px;flex:1;opacity:0;transition:opacity 1s ease;}
-h1{font-size:20px;margin:0 0 20px;color:var(--neon);text-shadow:0 0 6px rgba(0,246,255,.65);line-height:1.4;}
-h2{font-size:16px;color:var(--yellow);margin-bottom:14px;text-shadow:0 0 5px rgba(255,214,10,.6);}
-p.intro{font-size:10px;line-height:1.8;margin-bottom:24px;color:#e8faff;}
-.sys{margin:12px 0;font-size:12px;color:var(--warn);line-height:1.8;}
-.sys a {color: inherit; text-decoration: underline; cursor: pointer;}
-.sys a:hover {color: var(--neon);}
-
-/* FORMS & BUTTONS */
-input[type="email"]{width:100%;padding:10px;margin:8px 0;background:#000;color:#e8faff;border:2px solid #888;font-family:inherit;font-size:10px;outline:none;}
-input::placeholder{color:#bcdfe3;}
-input:focus{border-color:var(--neon);box-shadow:0 0 6px rgba(0,246,255,.7), inset 0 0 4px rgba(0,246,255,.4);}
-
-/* SNES STYLE CHOICE BUTTONS - ALIGNMENT FIXED */
-.choice-container { 
-    display: flex; 
-    flex-direction: row; /* CHANGED FROM COLUMN TO ROW */
-    justify-content: center; 
-    align-items: center;
-    gap: 20px; 
-    margin-top: 30px; 
+/* --- 6. OVERLAYS & MODALS --- */
+.overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.95);
+    display: none; align-items: center; justify-content: center; z-index: 100;
 }
-
-button.choice-btn {
-  padding: 10px 20px;
-  font-family: inherit;
-  font-size: 16px; 
-  background: transparent; 
-  color: var(--dim);
-  border: none; 
-  cursor: pointer;
-  position: relative;
-  text-transform: uppercase;
-  width: 120px; 
-  text-align: left;
-  padding-left: 30px;
+.arcade-popup {
+    background: #000; border: 4px solid var(--neon-pink); padding: 30px;
+    width: 90%; max-width: 500px; position: relative;
+    box-shadow: 10px 10px 0 rgba(0,0,0,0.5);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
 }
+.popup-msg { font-size: 20px; line-height: 1.5; margin-bottom: 20px; color: #fff; font-family: "VT323", monospace; text-align: center; }
 
-/* THE YELLOW TRIANGLE CURSOR */
-button.choice-btn::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 0; 
-  height: 0; 
-  border-top: 8px solid transparent;
-  border-bottom: 8px solid transparent;
-  border-left: 12px solid var(--yellow);
-  opacity: 0; 
-  transition: opacity 0.1s;
-}
+/* --- 7. CHECKBOXES & FOOTER --- */
+.terms-container { margin: 15px 0; text-align: left; border-top: 1px solid #333; padding-top: 15px; width: 100%; }
+.terms-container label { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; color: var(--neon-yellow); cursor: pointer; font-size: 18px;}
+.terms-container input { width: 20px; height: 20px; margin: 0; cursor: pointer; accent-color: var(--neon-cyan); }
+.terms-container a { color: var(--neon-yellow); text-decoration: underline; }
 
-button.choice-btn:hover, button.choice-btn:focus {
-  color: var(--white);
-  text-shadow: 0 0 5px var(--white);
-  outline: none;
-}
-button.choice-btn:hover::before,
-button.choice-btn:focus::before {
-  opacity: 1; 
-}
+.sys { margin: 15px 0; font-size: 18px; color: #555; text-transform: uppercase; min-height: 24px; }
+.sys.error { color: var(--neon-pink); }
+.sys.success { color: var(--neon-cyan); }
 
-/* ANIMATION CLASS FOR SELECTION */
-button.choice-btn.selected {
-    color: var(--yellow);
-    text-shadow: 0 0 8px var(--yellow);
-}
-button.choice-btn.selected::before {
-    opacity: 1;
-    animation: flash-arrow 0.1s steps(2) infinite;
-}
-
-@keyframes flash-arrow {
-    0% { opacity: 1; }
-    50% { opacity: 0; }
-    100% { opacity: 1; }
-}
-
-/* SUBMIT BUTTON */
-button.action-btn {
-  padding: 12px 20px; margin: 10px; font-family: inherit; font-size: 12px;
-  background: #000; color: var(--neon); border: 2px solid var(--neon);
-  cursor: pointer; transition: all 0.2s; text-transform: uppercase;
-}
-button.action-btn:hover:not(:disabled) {
-  background: var(--neon); color: #000; box-shadow: 0 0 10px rgba(0,246,255,.7);
-}
-button.action-btn:disabled {
-  border-color: var(--dim); color: var(--dim); cursor: not-allowed; opacity: 0.5;
-}
-
-/* MODALS */
-.overlay{position:fixed;inset:0;background:rgba(5,5,16,0.95);display:none;align-items:center;justify-content:center;z-index:100;}
-.modal-box{position:relative;max-width:500px;width:90%;border:3px solid var(--pink);padding:30px 20px;background:#000;box-shadow:0 0 16px rgba(255,47,199,0.35);}
-.close-btn{position:absolute;top:5px;right:5px;font-size:12px;color:var(--dim);cursor:pointer;background:none;border:1px solid var(--dim);width:24px;height:24px;line-height:22px;text-align:center;padding:0;}
-.close-btn:hover{color:var(--pink);border-color:var(--pink);text-shadow:0 0 6px rgba(255,47,199,.7);}
-.modal-msg{font-size:10px;color:var(--pink);margin-bottom:16px; line-height: 1.8;} 
-.success-msg{display:none;color:var(--ok);font-size:12px;text-shadow:0 0 6px rgba(34,255,136,.7);margin-top:20px;}
-
-/* CHECKBOX GROUP */
-.chk-group { text-align: left; margin: 15px 0; font-size: 8px; color: var(--white); display: flex; flex-direction: column; gap: 8px; }
-.chk-group label { display: flex; align-items: center; gap: 10px; cursor: pointer; }
-.chk-group a { color: var(--cyan); text-decoration: none; border-bottom: 1px dotted var(--cyan); }
-.chk-group a:hover { color: var(--ok); border-bottom-style: solid; }
-.chk-group input[type="checkbox"] { width: auto; margin: 0; cursor: pointer; accent-color: var(--pink); }
-
-/* PITHY POPUP STYLE */
-#noOverlay .modal-box { border-color: var(--warn); box-shadow: 0 0 16px rgba(255, 204, 0, 0.35); animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
-@keyframes shake { 10%, 90% { transform: translate3d(-1px, 0, 0); } 20%, 80% { transform: translate3d(2px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-4px, 0, 0); } 40%, 60% { transform: translate3d(4px, 0, 0); } }
-
-/* FOOTER FIXES */
 footer {
     width:100%; max-width:960px; margin:20px 0; padding:20px; 
-    border-top:1px solid var(--dim); font-size:8px;
-    display: flex; flex-direction: column; align-items: center; gap: 10px;
-    color: var(--dim);
+    border-top: 2px solid var(--neon-cyan); font-family: "Press Start 2P", cursive; font-size: 10px;
+    display: flex; flex-direction: column; align-items: center; gap: 15px;
+    color: var(--text-main);
 }
-footer a{ color: var(--dim); text-decoration:none; transition:color 0.2s; }
-footer a:hover{color:var(--neon);text-shadow:0 0 4px rgba(0,246,255,.6);}
+footer a { color: var(--neon-cyan); text-decoration:none; transition:color 0.2s; }
+footer a:hover { color: var(--neon-pink); }
 
-@media (min-width: 768px){
-    footer { flex-direction: row; justify-content: center; gap: 20px; }
-   .panel{padding:24px 16px;}
+.choice-container { display: flex; gap: 20px; justify-content: center; margin-top: 20px; }
+
+/* --- DESKTOP ENHANCEMENTS --- */
+@media (min-width: 768px) {
+    .hero-section { padding: 50px 0; }
+    .glitch { font-size: 64px; }
+    .hero-sub { font-size: 14px; padding: 10px 20px; }
+    .nav { gap: 20px; }
+    .nav a { font-size: 18px; padding: 20px 10px; }
+    h1 { font-size: 24px; padding-bottom: 15px; }
+    input { font-size: 26px; }
+    button { font-size: 18px; padding: 20px 30px; }
+    .terms-container label { font-size: 22px; }
+    .terms-container input { width: 25px; height: 25px; }
+    footer { flex-direction: row; justify-content: center; gap: 40px; font-size: 12px;}
+    
+    #press-enter { font-size: 24px; padding: 20px 40px; }
+    #launch-screen h1 { font-size: 80px; }
 }
 </style>
 </head>
 <body>
 
 <div id="launch-screen">
- <h1>GOALSURGE!</h1>
-  <div id="press-enter">PRESS ENTER OR CLICK TO START</div>
+  <div class="glitch" style="margin-bottom: 40px;">GOALSURGE!</div>
+  <div id="press-enter">PRESS ENTER / CLICK</div>
 </div>
 
-<div class="nav">
+<div class="nav" id="mainNav">
   <a href="index.html" class="active">HOME</a>
   <a href="predict.html">PLAY</a>
   <a href="scores.html">SCORES</a>
   <a href="rules.html">RULES</a>
 </div>
 
-<img src="banner1.jpg" class="banner" alt="GOALSURGE! Banner">
-
-<div class="panel">
-  <h1>WELCOME TO GOALSURGE!</h1>
-  <p class="intro">WORLD CUP 2026 IS COMING. GET SET FOR THE ULTIMATE PREDICTION CHALLENGE.</p>
-  <div class="sys">ARE YOU READY?</div>
-   
-  <div class="choice-container">
-    <button id="btnYes" class="choice-btn">YES</button>
-    <button id="btnNo" class="choice-btn">NO</button>
-  </div>
-</div>
-
-<footer>
-  <div class="footer-links">
-    <a href="privacy.html">PRIVACY POLICY</a> | <a href="terms.html">TERMS & CONDITIONS</a> 
-  </div>
-  <div>© 2026 GOALSURGE</div>
-</footer>
-
-<div class="overlay" id="regOverlay">
-  <div class="modal-box">
-    <button class="close-btn" id="closeReg">X</button>
-    <h2>STAY UPDATED</h2>
-    <div class="modal-msg" id="modalFormArea">
-      BE THE FIRST TO KNOW WHEN KICK-OFF APPROACHES.
-      <input type="email" id="regEmail" name="email" placeholder="ENTER EMAIL ADDRESS">
-      
-      <div class="chk-group">
-        <label>
-          <input type="checkbox" id="chkPrivacy">
-          <span>I AGREE TO THE <a href="privacy.html" target="_blank">PRIVACY POLICY</a></span>
-        </label>
-        <label>
-          <input type="checkbox" id="chkTerms">
-          <span>I AGREE TO THE <a href="terms.html" target="_blank">GENERAL TERMS</a></span>
-        </label>
-      </div>
-
-      <button id="submitRegBtn" class="action-btn" disabled>SUBMIT</button>
-      <div class="sys" id="regError"></div>
-    </div>
-    <div class="success-msg" id="regSuccess">
-      THANKS! YOU ARE ON THE LIST.<br>PREPARE YOURSELF.
-    </div>
-  </div>
-</div>
-
-<div class="overlay" id="noOverlay">
-  <div class="modal-box">
-    <button class="close-btn" id="closeNo">X</button>
-    <h2 style="color:var(--warn);">NOT READY?</h2>
-    <div class="modal-msg" style="color:var(--white);">
-      WEAKNESS DETECTED.<br><br>
-      GO READ THE <a href="rules.html" style="color:var(--warn);">RULES</a> AND COME BACK WHEN YOU HAVE THE GUTS.
-    </div>
-  </div>
-</div>
-
-<script>
-'use strict';
-
-// LAUNCH SCREEN: ENTER OR CLICK
-const launchScreen = document.getElementById('launch-screen');
-const nav = document.querySelector('.nav');
-const banner = document.querySelector('.banner');
-const panel = document.querySelector('.panel');
-
-function hideLaunchScreen() {
- launchScreen.style.display = 'none';
-  nav.style.opacity = '1';
-  banner.style.opacity = '1';
-  panel.style.opacity = '1';
-}
-
-document.addEventListener('keydown', function(e){
-  if(e.key === 'Enter'){ hideLaunchScreen(); }
-});
-launchScreen.addEventListener('click', hideLaunchScreen);
-
-// ELEMENTS
-const btnYes = document.getElementById('btnYes');
-const btnNo = document.getElementById('btnNo');
-
-// REG ELEMENTS
-const regOverlay = document.getElementById('regOverlay');
-const closeReg = document.getElementById('closeReg');
-const submitRegBtn = document.getElementById('submitRegBtn');
-const regEmail = document.getElementById('regEmail');
-const regFormArea = document.getElementById('modalFormArea');
-const regSuccess = document.getElementById('regSuccess');
-const regError = document.getElementById('regError');
-const chkPrivacy = document.getElementById('chkPrivacy');
-const chkTerms = document.getElementById('chkTerms');
-
-// NO ELEMENTS
-const noOverlay = document.getElementById('noOverlay');
-const closeNo = document.getElementById('closeNo');
-
-// LOGIC
-
-// SNES EFFECT HELPER
-function selectOption(btnElement, callback) {
-    // Add the class that triggers the flashing arrow animation
-   btnElement.classList.add('selected');
-    
-    // Wait 600ms for the flash to happen "a couple of times"
-    setTimeout(() => {
-       btnElement.classList.remove('selected');
-        callback();
-    }, 600);
-}
-
-// 1. CLICK NO
-btnNo.onclick = () => {
-  selectOption(btnNo, () => {
-     noOverlay.style.display = 'flex';
-  });
-};
-closeNo.onclick = () => {
- noOverlay.style.display = 'none';
-};
-
-// 2. CLICK YES
-btnYes.onclick = () => {
-  selectOption(btnYes, () => {
-     regOverlay.style.display = 'flex';
-     regEmail.focus();
-  });
-};
-closeReg.onclick = () => {
- regOverlay.style.display = 'none';
-  resetModal();
-};
-
-// 3. CHECKBOX VALIDATION
-function updateSubmitState() {
-  if (chkPrivacy.checked && chkTerms.checked) {
-   submitRegBtn.disabled = false;
-  } else {
-   submitRegBtn.disabled = true;
-  }
-}
-
-chkPrivacy.addEventListener('change', updateSubmitState);
-chkTerms.addEventListener('change', updateSubmitState);
-
-// 4. SUBMIT REGISTRATION (GOOGLE SHEET HOOKUP)
-const scriptURL = 'https://script.google.com/macros/s/AKfycbxCFEaBq6Wy373AULmkT8sJ4lKFjP7rZhNXfcecQ6rugtd_MVAwd1BRn2rvavUub6CAKA/exec';
-
-submitRegBtn.onclick = () => {
-  const email = regEmail.value.trim();
-  
-  if(email.includes('@') && email.length > 5){
-      // Show loading state
-      submitRegBtn.textContent = 'SENDING...';
-      submitRegBtn.disabled = true;
-
-      // Prepare Data
-      // Using 'privacy' and 'terms' to match the sheet headers we discussed.
-      let formData = new FormData();
-      formData.append('email', email);
-      formData.append('privacy', 'Agreed');
-      formData.append('terms', 'Agreed');
-      
-      // Fetch to Google Sheet
-      fetch(scriptURL, { method: 'POST', body: formData })
-      .then(response => {
-           // Success
-           regFormArea.style.display = 'none';
-           regSuccess.style.display = 'block';
-           regError.textContent = '';
-           submitRegBtn.textContent = 'SUBMIT'; // Reset text
-      })
-      .catch(error => {
-           // Error
-           console.error('Error!', error.message);
-           regError.textContent = 'TRANSMISSION ERROR. TRY AGAIN.';
-           submitRegBtn.disabled = false;
-           submitRegBtn.textContent = 'SUBMIT';
-      });
-
-  } else {
-   regError.textContent = 'INVALID EMAIL DETECTED';
-  }
-};
-
-function resetModal(){
-  setTimeout(()=>{
-   regFormArea.style.display = 'block';
-   regSuccess.style.display = 'none';
-    regEmail.value = '';
-   regError.textContent = '';
-    chkPrivacy.checked = false;
-    chkTerms.checked = false;
-   submitRegBtn.disabled = true;
-  }, 500);
-}
-</script>
-</body>
-</html>
-
-```
+<div class="hero-section" id="hero">
+    <div class="scanlines"></div>
+    <div class="hero-content">
+        <h1 class="glitch" data-text="GOALSURGE!">GOALSURGE!</h1>
+        <div class="hero-sub">WORLD
