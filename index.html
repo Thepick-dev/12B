@@ -214,4 +214,181 @@ footer a:hover { color: var(--neon-pink); }
     <div class="scanlines"></div>
     <div class="hero-content">
         <h1 class="glitch" data-text="GOALSURGE!">GOALSURGE!</h1>
-        <div class="hero-sub">WORLD
+        <div class="hero-sub">WORLD CUP 2026</div>
+    </div>
+</div>
+
+<div class="panel" id="mainPanel">
+    <h1>WELCOME TO THE FUTURE</h1>
+    
+    <img src="banner1.jpg" class="banner" alt="GOALSURGE! Banner">
+    
+    <div class="intro-text">
+        WORLD CUP 2026 IS COMING. GET SET FOR THE ULTIMATE PREDICTION CHALLENGE.
+    </div>
+    
+    <div style="font-family:'Press Start 2P'; font-size: 14px; color: var(--neon-cyan); margin-top:20px;">ARE YOU READY?</div>
+    
+    <div class="choice-container">
+        <button id="btnYes">YES</button>
+        <button id="btnNo">NO</button>
+    </div>
+</div>
+
+<footer>
+    <div class="footer-links">
+        <a href="privacy.html">PRIVACY POLICY</a> | <a href="terms.html">TERMS & CONDITIONS</a> 
+    </div>
+    <div>© 2026 GOALSURGE</div>
+</footer>
+
+<div class="overlay" id="regOverlay">
+    <div class="arcade-popup">
+        <button class="close-btn" id="closeReg">X</button>
+        <div style="font-family:'Press Start 2P'; color:var(--neon-pink); margin-bottom:20px; font-size:16px;">STAY UPDATED</div>
+        
+        <div id="modalFormArea" style="width:100%;">
+            <div class="popup-msg">BE THE FIRST TO KNOW WHEN KICK-OFF APPROACHES.</div>
+            
+            <input type="email" id="regEmail" name="email" placeholder="EMAIL ADDRESS">
+            
+            <div class="terms-container">
+                <label><input type="checkbox" id="chkPrivacy"> <span>I AGREE TO THE <a href="privacy.html" target="_blank">PRIVACY POLICY</a></span></label>
+                <label><input type="checkbox" id="chkTerms"> <span>I AGREE TO THE <a href="terms.html" target="_blank">GENERAL TERMS</a></span></label>
+            </div>
+
+            <button id="submitRegBtn" style="width:100%; margin-top:10px;" disabled>SUBMIT</button>
+            <div class="sys" id="regError"></div>
+        </div>
+
+        <div id="regSuccess" style="display:none; text-align:center;">
+             <div style="font-size:24px; color:var(--neon-cyan); margin-bottom:20px;">SYSTEM UPDATED</div>
+             <div class="popup-msg">YOU ARE ON THE LIST.<br>PREPARE YOURSELF.</div>
+        </div>
+    </div>
+</div>
+
+<div class="overlay" id="noOverlay">
+    <div class="arcade-popup">
+        <button class="close-btn" id="closeNo">X</button>
+        <div style="font-family:'Press Start 2P'; color:var(--neon-yellow); margin-bottom:20px; font-size:16px;">WEAKNESS DETECTED</div>
+        <div class="popup-msg">
+            GO READ THE <a href="rules.html" style="color:var(--neon-pink); text-decoration:underline;">RULES</a> AND COME BACK WHEN YOU HAVE THE GUTS.
+        </div>
+    </div>
+</div>
+
+<script>
+'use strict';
+
+// 1. LAUNCH SCREEN LOGIC
+const launchScreen = document.getElementById('launch-screen');
+const nav = document.getElementById('mainNav');
+const hero = document.getElementById('hero');
+const panel = document.getElementById('mainPanel');
+
+function hideLaunchScreen() {
+    launchScreen.style.display = 'none';
+    nav.style.opacity = '1';
+    hero.style.opacity = '1';
+    panel.style.opacity = '1';
+}
+
+document.addEventListener('keydown', function(e){
+  if(e.key === 'Enter'){ hideLaunchScreen(); }
+});
+launchScreen.addEventListener('click', hideLaunchScreen);
+
+// 2. ELEMENTS & MODALS
+const btnYes = document.getElementById('btnYes');
+const btnNo = document.getElementById('btnNo');
+
+const regOverlay = document.getElementById('regOverlay');
+const closeReg = document.getElementById('closeReg');
+const submitRegBtn = document.getElementById('submitRegBtn');
+const regEmail = document.getElementById('regEmail');
+const regFormArea = document.getElementById('modalFormArea');
+const regSuccess = document.getElementById('regSuccess');
+const regError = document.getElementById('regError');
+const chkPrivacy = document.getElementById('chkPrivacy');
+const chkTerms = document.getElementById('chkTerms');
+
+const noOverlay = document.getElementById('noOverlay');
+const closeNo = document.getElementById('closeNo');
+
+// 3. INTERACTION LOGIC
+
+// Click No -> Show Weakness Modal
+btnNo.onclick = () => { noOverlay.style.display = 'flex'; };
+closeNo.onclick = () => { noOverlay.style.display = 'none'; };
+
+// Click Yes -> Show Reg Modal
+btnYes.onclick = () => { 
+    regOverlay.style.display = 'flex'; 
+    regEmail.focus(); 
+};
+closeReg.onclick = () => { 
+    regOverlay.style.display = 'none'; 
+    resetModal();
+};
+
+// Checkbox Validation
+function updateSubmitState() {
+  submitRegBtn.disabled = !(chkPrivacy.checked && chkTerms.checked);
+}
+chkPrivacy.addEventListener('change', updateSubmitState);
+chkTerms.addEventListener('change', updateSubmitState);
+
+// 4. GOOGLE SHEET SUBMISSION
+const scriptURL = 'https://script.google.com/macros/s/AKfycbxCFEaBq6Wy373AULmkT8sJ4lKFjP7rZhNXfcecQ6rugtd_MVAwd1BRn2rvavUub6CAKA/exec';
+
+submitRegBtn.onclick = () => {
+  const email = regEmail.value.trim();
+  
+  if(email.includes('@') && email.length > 5){
+      // Loading State
+      submitRegBtn.textContent = 'SENDING...';
+      submitRegBtn.disabled = true;
+
+      let formData = new FormData();
+      formData.append('email', email);
+      formData.append('privacy', 'Agreed');
+      formData.append('terms', 'Agreed');
+      
+      fetch(scriptURL, { method: 'POST', body: formData })
+      .then(response => {
+           // Success
+           regFormArea.style.display = 'none';
+           regSuccess.style.display = 'block';
+           regError.textContent = '';
+           submitRegBtn.textContent = 'SUBMIT';
+      })
+      .catch(error => {
+           // Error
+           console.error('Error!', error.message);
+           regError.textContent = 'TRANSMISSION ERROR. TRY AGAIN.';
+           regError.className = 'sys error';
+           submitRegBtn.disabled = false;
+           submitRegBtn.textContent = 'SUBMIT';
+      });
+
+  } else {
+    regError.textContent = 'INVALID EMAIL DETECTED';
+    regError.className = 'sys error';
+  }
+};
+
+function resetModal(){
+  setTimeout(()=>{
+    regFormArea.style.display = 'block';
+    regSuccess.style.display = 'none';
+    regEmail.value = '';
+    regError.textContent = '';
+    chkPrivacy.checked = false;
+    chkTerms.checked = false;
+    submitRegBtn.disabled = true;
+  }, 500);
+}
+</script>
+</body>
+</html>
