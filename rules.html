@@ -2,296 +2,621 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>GOALSTORM! — RULES</title>
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>GOALSTORM! — ROUND 3</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
 <style>
+/* --- 1. CORE PALETTE: HOT ARCADE (VERSION 2) --- */
 :root{
-  --bg:#050510; --panel:#0b0b1f; --neon:#00f6ff; --ok:#22ff88; --warn:#ffcc00; --dim:#666;
-  --cyan:#00F6FF; --yellow:#FFD60A; --pink:#FF2FC7; --white:#F7F7F2;
+  --bg: #0f0e17;          
+  --panel: #1a1a2e;       
+  --neon-pink: #ff2a6d;   /* ACTION */
+  --neon-cyan: #05d9e8;   /* STRUCTURE */
+  --neon-yellow: #ffc800; /* DATA */
+  --text-main: #d1d1d1;
+  --dim: #444;
 }
+
 *{box-sizing:border-box;margin:0;padding:0;}
-body{margin:0;background:radial-gradient(circle at top,#0c0c2a,#000);color:#e8faff;font-family:"Press Start 2P",monospace;text-align:center;display:flex;flex-direction:column;align-items:center;min-height:100vh;}
 
-/* NAV */
+body{
+    margin:0;
+    background-color: var(--bg);
+    background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 20px 20px;
+    color: var(--text-main);
+    font-family:"VT323", monospace;
+    font-size: 20px; 
+    text-align:center;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    min-height: 100vh;
+    padding-bottom: 60px;
+}
+
+/* --- 2. HEADER & GLITCH --- */
+.hero-section {
+    width: 100%; max-width: 960px; padding: 30px 0; margin-bottom: 20px;
+    border-bottom: 4px solid var(--neon-cyan);
+    background: linear-gradient(180deg, rgba(5, 217, 232, 0) 0%, rgba(5, 217, 232, 0.1) 100%);
+    position: relative; overflow: hidden;
+    text-align: center;
+}
+.scanlines {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1));
+    background-size: 100% 4px; pointer-events: none; z-index: 2;
+}
+.glitch {
+    font-family: "Press Start 2P", cursive; font-size: 32px; 
+    color: var(--neon-yellow);
+    text-shadow: 4px 4px 0px var(--neon-pink), -3px -3px 0px var(--neon-cyan);
+    text-transform: uppercase; margin: 0; line-height: 1; letter-spacing: -2px;
+}
+.hero-sub {
+    font-family: "Press Start 2P", cursive; font-size: 10px; color: #fff;
+    margin-top: 15px; letter-spacing: 3px; background: var(--neon-pink);
+    padding: 6px 12px; display: inline-block; box-shadow: 4px 4px 0 #000;
+}
+
+/* --- 3. NAV & BUTTONS --- */
 .nav {
-  width: 100%;
-  max-width: 960px;
-  display: flex;
-  justify-content: space-around;
-  background: transparent;
-  border: none;
-  box-shadow: none;
-  margin: 16px auto 10px;
-  padding: 0 10px;
-  gap: 6px;
+  width: 100%; max-width: 960px; display: flex; gap: 10px; padding: 10px; margin-top: 10px;
 }
-
 .nav a {
-  flex: 1;
-  font-size: 10px;
-  padding: 12px 4px;
-  color: var(--dim);
-  text-decoration: none;
-  background: transparent;
-  border: none;
-  transition: all 0.2s;
-  position: relative;
+  flex: 1; font-family: "Press Start 2P", cursive; font-size: 10px; padding: 12px 5px;
+  color: var(--neon-cyan); text-decoration: none; background: #111;
+  border: 2px solid var(--neon-cyan); box-shadow: 4px 4px 0px 0px rgba(5, 217, 232, 0.4);
+  text-transform: uppercase; transition: all 0.1s; display: flex; align-items: center; justify-content: center;
+}
+.nav a.active { background: var(--neon-pink); border-color: var(--neon-pink); color: #fff; }
+
+/* ARCADE BUTTONS */
+button, .btn-arcade {
+    font-family: "Press Start 2P", cursive; font-size: 12px; padding: 15px; margin: 5px;
+    color: #fff; background: #111; border: 2px solid var(--dim);
+    box-shadow: 2px 2px 0px #000; cursor: pointer; transition: all 0.05s; text-transform: uppercase;
+}
+button:hover, .btn-arcade:hover { border-color: #fff; transform: translate(-1px, -1px); }
+
+/* Selected State */
+.btn-arcade.selected {
+    background: var(--neon-pink); border-color: #fff;
+    box-shadow: 0 0 10px var(--neon-pink);
+    color: #fff;
 }
 
-.nav a:hover {
-  color: var(--ok);
+/* Specific Match Buttons */
+.method-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+.team-col { display: flex; flex-direction: column; gap: 5px; }
+.team-header { color: var(--neon-cyan); font-family: "Press Start 2P"; font-size: 10px; margin-bottom: 10px; text-align: center; border-bottom: 2px solid var(--neon-cyan); padding-bottom:5px;}
+
+.btn-method {
+    font-size: 9px; padding: 10px 5px; width: 100%;
+    background: #000; color: #888; border: 1px solid #444;
+}
+.btn-method:hover { border-color: var(--neon-yellow); color: var(--neon-yellow); }
+.btn-method.selected {
+    background: var(--neon-cyan); color: #000; border-color: #fff; box-shadow: 0 0 10px var(--neon-cyan);
 }
 
-/* Active Page - Power Surge Flash with Green */
-.nav a.active {
-  color: var(--ok);
-  border: 2px solid var(--ok);
-  background: #000;
-  padding: 10px 4px;
-  box-shadow: 0 0 5px var(--ok),
-              inset 0 0 10px rgba(34,255,136,.2);
-  animation: power-surge-green 1.2s infinite ease-in-out;
+.time-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px;
+}
+.time-btn {
+    padding: 8px 2px; font-size: 10px; background: #000; border: 1px solid #444; color: #888;
+    font-family: "VT323", monospace; cursor: pointer;
+}
+.time-btn:hover { color: var(--neon-yellow); border-color: var(--neon-yellow); }
+.time-btn.selected {
+    background: var(--neon-yellow); color: #000; border-color: #fff; box-shadow: 0 0 10px var(--neon-yellow);
 }
 
-@keyframes power-surge-green {
-  0%, 100% {
-    background: #000;
-    box-shadow: 0 0 5px var(--ok),
-                inset 0 0 10px rgba(34,255,136,.2);
-  }
-  50% {
-    background: #001a0f;
-    box-shadow: 0 0 15px var(--ok),
-                0 0 25px rgba(34,255,136,.3),
-                inset 0 0 20px rgba(34,255,136,.4);
-  }
+/* --- 4. PANELS & INPUTS --- */
+.panel {
+    width: 95%; max-width: 960px; background: var(--panel);
+    border: 3px solid var(--neon-cyan); padding: 20px; margin-bottom: 25px;
+    box-shadow: 0 0 20px rgba(5, 217, 232, 0.1);
+}
+h1 {
+    font-family: "Press Start 2P", cursive; font-size: 16px; margin-bottom: 20px;
+    color: var(--neon-cyan); border-bottom: 4px solid #000; padding-bottom: 10px; text-align: left; line-height: 1.4;
+}
+.instructions {
+    font-family: "VT323"; font-size: 18px; color: var(--text-main); margin-bottom: 15px; text-align: left;
 }
 
-/* PANELS */
-.panel{width:100%;max-width:960px;background:var(--panel);border:2px solid var(--neon);box-shadow:0 0 25px rgba(0,246,255,.35);padding:20px;margin-bottom:20px;flex:1;}
-h1{font-size:18px;margin:0 0 16px;color:var(--neon);text-shadow:0 0 8px rgba(0,246,255,.8);}
-.sys{margin:12px 0;font-size:12px;color:var(--warn);line-height:1.8;}
-.intro-text{font-size:9px;line-height:1.8;margin-bottom:20px;color:#e8faff;max-width:800px;margin-left:auto;margin-right:auto;}
-
-/* BANNER */
-.banner {
-  max-width: 600px;
-  width: 100%;
-  height: auto;
-  display: block;
-  margin-bottom: 20px;
+input, select {
+    width: 100%; padding: 15px; margin: 10px 0; 
+    background: #000; color: var(--neon-yellow);
+    border: 2px solid #888;
+    font-family: "VT323", monospace; font-size: 24px; outline: none; text-transform: uppercase;
+    transition: all 0.3s;
 }
+input:focus, select:focus { border-color: var(--neon-yellow); }
+input::placeholder { color: var(--neon-pink); opacity: 0.7; }
 
-/* CAROUSEL & TABS STYLING ADAPTED FOR V2 LOOK */
-.neon-selector{display:flex;gap:10px;justify-content:center;align-items:center;margin-bottom:20px;flex-wrap:wrap;}
-.neon-pill{
-  padding:10px 14px;
-  background:#000;
-  color:var(--dim);
-  border:2px solid var(--dim);
-  font-family:inherit;
-  font-size:10px;
-  cursor:pointer;
-  transition:all .2s;
-  outline:none;
+/* --- 5. GAME SPECIFIC LAYOUTS --- */
+.match-container {
+    background: #12121c; border: 2px solid #000; padding: 15px; margin-bottom: 20px;
 }
-.neon-pill:hover{ border-color:var(--neon); color:var(--neon); }
-.neon-pill.active{
-  background:var(--neon);
-  color:#000;
-  border-color:var(--neon);
-  box-shadow:0 0 15px var(--neon);
+.match-title { 
+    font-family: "Press Start 2P"; font-size: 12px; color: var(--neon-yellow); 
+    margin-bottom: 15px; text-align: center; border-bottom: 1px dashed #444; padding-bottom: 10px;
 }
 
-.carousel{position:relative;overflow:hidden;width:100%;}
-.slides{display:flex;transition:transform .3s ease-in-out;}
-.slide{flex:0 0 100%;width:100%;padding:0 10px;box-sizing:border-box;}
+/* STRATEGY TOGGLE */
+.strategy-toggle { display: flex; gap: 10px; margin-bottom: 20px; }
+.strat-btn {
+    flex: 1; padding: 20px; border: 2px solid #444; background: #000; color: #666;
+    font-family: "Press Start 2P"; font-size: 12px; cursor: pointer;
+}
+.strat-btn.active-hedge {
+    border-color: var(--neon-cyan); color: var(--neon-cyan);
+    box-shadow: inset 0 0 15px rgba(5, 217, 232, 0.5);
+}
+.strat-btn.active-risk {
+    border-color: var(--neon-pink); color: var(--neon-pink);
+    box-shadow: inset 0 0 15px rgba(255, 42, 109, 0.5);
+    animation: pulseRisk 2s infinite;
+}
+@keyframes pulseRisk { 0%{box-shadow:inset 0 0 5px var(--neon-pink);} 50%{box-shadow:inset 0 0 20px var(--neon-pink);} 100%{box-shadow:inset 0 0 5px var(--neon-pink);} }
 
-.rule-block{
-  border:1px solid var(--dim);
-  background:rgba(0,0,0,0.3);
-  padding:15px;
-  margin-bottom:15px;
-  text-align:left;
-}
-.rule-block h3{
-  font-size:10px;
-  color:var(--yellow);
-  margin-bottom:8px;
-  text-transform:uppercase;
-  text-shadow:0 0 5px rgba(255,214,10,0.5);
-}
-.rule-block p{
-  font-size:9px;
-  line-height:1.6;
-  color:#e8faff;
-  margin:0;
-}
+.strat-content { display: none; padding: 15px; border: 2px dashed #333; background: #000; }
+.strat-content.visible { display: block; }
 
-/* DOTS */
-.controls{display:flex;justify-content:center;margin-top:10px;}
-.dots{display:flex;gap:8px;}
-.dot{
-  width:10px; height:10px;
-  background:#000;
-  border:2px solid var(--dim);
-  cursor:pointer;
+/* RED CARD STACK */
+.option-row {
+    display: flex; align-items: center; gap: 15px;
+    padding: 12px; margin-bottom: 8px;
+    border: 1px solid #333; background: #000; cursor: pointer;
+    font-family: "VT323"; font-size: 20px; text-align: left;
 }
-.dot.active{
-  background:var(--neon);
-  border-color:var(--neon);
-  box-shadow:0 0 8px var(--neon);
+.option-row:hover { border-color: var(--neon-pink); color: var(--neon-pink); }
+.option-row.selected {
+    border-color: var(--neon-pink); background: rgba(255, 42, 109, 0.2);
+    color: #fff; box-shadow: 0 0 10px var(--neon-pink);
 }
+.opt-letter { font-family: "Press Start 2P"; font-size: 10px; color: var(--neon-yellow); min-width: 25px; }
 
-/* FOOTER */
-footer{width:100%;max-width:960px;margin:20px 0;padding:20px;border-top:1px solid var(--dim);font-size:8px;}
-footer a{color:var(--dim);text-decoration:none;transition:color 0.2s;}
-footer a:hover{color:var(--neon);text-shadow:0 0 5px var(--neon);}
+/* SYSTEM MESSAGES */
+.sys { margin: 15px 0; font-size: 18px; color: #555; text-transform: uppercase; min-height: 24px; transition: color 0.3s; }
+.sys.active { color: var(--neon-pink); }
+.sys.complete { color: var(--neon-cyan); text-shadow: 0 0 5px var(--neon-cyan); }
 
+/* --- 6. OVERLAYS & SUBMIT --- */
+.submit-area { width: 95%; max-width: 960px; margin-top: 20px; }
+#submitBtn {
+    width: 100%; background: #222; color: #555; border: 2px solid #444; font-size: 18px; padding: 25px; cursor: not-allowed;
+}
+#submitBtn.ready {
+    background: var(--neon-pink); color: #fff; border-color: #fff; cursor: pointer;
+    box-shadow: 0 0 20px var(--neon-pink); animation: pulseReady 1.5s infinite;
+}
+@keyframes pulseReady { 0%{transform:scale(1);} 50%{transform:scale(1.02);} 100%{transform:scale(1);} }
+
+/* TICKET OVERLAY (V2 Style) */
+.submit-overlay {
+    position: fixed; inset: 0; background: rgba(10, 10, 15, 0.98);
+    display: none; align-items: center; justify-content: center; z-index: 20;
+}
+.submit-box {
+    width: 96%; max-width: 500px; max-height: 95vh; overflow-y: auto;
+    background: #000; border: 4px solid var(--neon-yellow); padding: 0;
+    box-shadow: 0 0 50px rgba(255, 200, 0, 0.1);
+}
+.submit-header {
+    background: var(--neon-yellow); color: #000; padding: 15px;
+    font-family: "Press Start 2P"; font-size: 14px; text-align: center;
+}
+.submit-body { padding: 15px; font-family: "VT323"; font-size: 20px; text-align: left; }
+.ticket-row { 
+    border-bottom: 1px dashed #333; padding: 8px 0; display: flex; justify-content: space-between;
+}
+.ticket-label { color: var(--neon-cyan); }
+.ticket-val { color: #fff; text-align: right; }
+
+/* DESKTOP TWEAKS */
+@media (min-width: 768px) {
+    .glitch { font-size: 48px; }
+    h1 { font-size: 24px; }
+    .btn-method { font-size: 12px; }
+    .time-btn { font-size: 14px; padding: 10px; }
+}
 </style>
 </head>
 <body>
 
 <div class="nav">
-  <a href="index.html">HOME</a>
-  <a href="predict.html">PLAY</a>
-  <a href="scores.html">SCORES</a>
-  <a href="rules.html" class="active">RULES</a>
+  <a href="#">HOME</a>
+  <a href="#" class="active">PLAY</a>
+  <a href="#">SCORES</a>
+  <a href="#">RULES</a>
 </div>
 
-<img src="banner1.jpg" class="banner" alt="GOALSTORM! Banner">
+<div class="hero-section">
+    <div class="scanlines"></div>
+    <div class="hero-content">
+        <h1 class="glitch">GOALSTORM!</h1>
+        <div class="hero-sub">ROUND 3: SEMI FINALS</div>
+    </div>
+</div>
 
 <div class="panel">
-  <h1>TOURNAMENT RULES</h1>
-  
-  <p class="intro-text">
-    The player with the most points at the end of the three rounds will be crowned the champion. Don't worry if you miss a round - there are prizes available for the winners of the individual rounds.
-  </p>
-
-  <div class="neon-selector" id="neonSelector">
-    <button class="neon-pill active" data-index="0">ROUND 1</button>
-    <button class="neon-pill" data-index="1">ROUND 2</button>
-    <button class="neon-pill" data-index="2">ROUND 3</button>
-  </div>
-
-  <div class="carousel">
-    <div class="slides" id="slides">
-
-      <div class="slide">
-        <div class="rule-block">
-          <h3>TEAM PICKS</h3>
-          <p>
-            Pick the 12 teams you think will finish 2nd in the group stage and the 8 teams you think will qualify as the best 3rd placed teams (4 teams that finish in 3rd place in their group will be eliminated and 8 will proceed to the Round of 32).<br><br>
-            For every team you pick who qualifies for the Round of 32 you will win 1 point.<br><br>
-            For every team you place correctly you will win an additional 3 points.<br><br>
-            The maximum number of points you can win per team is 4.
-          </p>
-        </div>
-        <div class="rule-block">
-          <h3>PLAYER PICKS</h3>
-          <p>You will pick one combo of 2 players from the pre-set list and be assigned a random bonus player at the final selection stage. You will earn 2 points for each goal scored by those 3 players in the group stage (subject to a combined cap of 20 points).</p>
-        </div>
-        <div class="rule-block">
-          <h3>TIEBREAKER</h3>
-          <p>Select the total number of goals you think will be scored in the group stage. This will determine the winner of the round if two or more players are tied on points.</p>
-        </div>
-      </div>
-
-      <div class="slide">
-        <div class="rule-block">
-          <h3>TEAM PICKS</h3>
-          <p>
-            Predict the winner of each match in the last 32, last 16 and quarter finals. Predict whether that team will win the match in normal time, in extra time or on penalties!<br><br>
-            You win 2 points for correctly predicting the winner of a match and a bonus point if you correctly predict whether they do it in normal time, in extra time or on penalties.<br><br>
-            In the last 16 and quarter finals, you do not need your predicted winner to beat the team that you predicted they would be playing - you will still earn points if they beat a different team.
-          </p>
-        </div>
-        <div class="rule-block">
-          <h3>PLAYER PICKS</h3>
-          <p> You will pick a combo of players from the pre-set list. You will get 2 points for each goal scored by those players in the Round of 32, Round of 16 and Quarter Finals (subject to a combined cap of 16 points).</p>
-        </div>
-        <div class="rule-block">
-          <h3>TIEBREAKER</h3>
-          <p>Select the total number of goals you think will be scored in the Round of 32, Round of 16 and Quarter Finals (not including penalties in shootouts). This will determine the winner of the round if two or more players are tied on points.</p>
-        </div>
-      </div>
-
-      <div class="slide">
-        <div class="rule-block">
-          <h3>ANSWER THE FOLLOWING QUESTIONS TO WIN POINTS</h3>
-          <p>TBC</p>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <div class="controls">
-    <div class="dots" id="dots"></div>
-  </div>
-
+    <h1>PLAYER TERMINAL</h1>
+    
+    <input type="text" id="username" placeholder="USERNAME (REQUIRED)" oninput="validate()">
+    <input type="email" id="email" placeholder="EMAIL ADDRESS (REQUIRED)" oninput="validate()">
+    <input type="number" id="tiebreaker" placeholder="TIEBREAKER: TOTAL YELLOW CARDS (FINAL 4 GAMES)" oninput="validate()">
+    
+    <div class="sys" id="sysMsg">AWAITING INPUT...</div>
 </div>
 
-<footer>
-  <a href="privacy.html">PRIVACY POLICY</a> | © 2026 GOALSURGE
-</footer>
+<div class="panel">
+    <h1>MATCH PREDICTIONS</h1>
+    <div class="instructions">
+        <span style="color:var(--neon-pink)">POINTS:</span> Winner (5pts), Method (3pts), Goal Time (5pts).
+    </div>
+    
+    <div id="sf1-container"></div>
+    <div id="sf2-container"></div>
+</div>
+
+<div class="panel">
+    <h1>3RD PLACE & FINAL</h1>
+    <div class="instructions" style="font-size:16px; color:#666;">
+        LOSERS SF1/SF2 VS WINNERS SF1/SF2
+    </div>
+    <div id="playoff-container"></div>
+    <div id="final-container"></div>
+</div>
+
+<div class="panel">
+    <h1>STRATEGY SELECT</h1>
+    <div class="instructions">CHOOSE YOUR PATH.</div>
+    
+    <div class="strategy-toggle">
+        <button class="strat-btn" id="btnHedge" onclick="setStrategy('hedge')">HEDGE IT<br><span style="font-size:8px; display:block; margin-top:5px; color:#888;">(RANK 1-4)</span></button>
+        <button class="strat-btn" id="btnRisk" onclick="setStrategy('risk')">RISK IT<br><span style="font-size:8px; display:block; margin-top:5px; color:#888;">(PICK 1 WINNER)</span></button>
+    </div>
+
+    <div id="hedgeContent" class="strat-content">
+        <h2 style="color:var(--neon-cyan); font-family:'Press Start 2P'; font-size:12px; margin-bottom:15px;">RANK THE TEAMS</h2>
+        <div class="instructions">1st = 10pts | 2nd = 7pts | 3rd = 5pts | 4th = 2pts</div>
+        <select id="rank1" onchange="validate()"><option value="">1ST PLACE...</option></select>
+        <select id="rank2" onchange="validate()"><option value="">2ND PLACE...</option></select>
+        <select id="rank3" onchange="validate()"><option value="">3RD PLACE...</option></select>
+        <select id="rank4" onchange="validate()"><option value="">4TH PLACE...</option></select>
+    </div>
+
+    <div id="riskContent" class="strat-content" style="border-color:var(--neon-pink);">
+        <h2 style="color:var(--neon-pink); font-family:'Press Start 2P'; font-size:12px; margin-bottom:15px;">ALL OR NOTHING</h2>
+        <div class="instructions">Pick the Champion. 25 Points if correct. 0 if wrong.</div>
+        <select id="riskSelect" onchange="validate()"><option value="">SELECT CHAMPION...</option></select>
+    </div>
+</div>
+
+<div class="panel">
+    <h1>RED CARD CHAOS [10pts]</h1>
+    <div class="instructions">PICK ONE SCENARIO. CARDS TO PLAYERS ON PITCH ONLY.</div>
+    <div id="redCardOptions" style="display:flex; flex-direction:column; gap:5px;"></div>
+</div>
+
+<div class="panel">
+    <h1>PLAYER COMBO [15pts]</h1>
+    <div class="instructions">PICK THE DUO WITH MOST GOALS + ASSISTS COMBINED.</div>
+    <select id="playerCombo" onchange="validate()">
+        <option value="">SELECT DUO...</option>
+        <option>Mbappe & Kane</option>
+        <option>Messi & Alvarez</option>
+        <option>Yamal & Williams</option>
+        <option>Bellingham & Saka</option>
+        <option>Griezmann & Giroud</option>
+        <option>Vinicius & Rodrygo</option>
+        <option>Lautaro & Di Maria</option>
+        <option>Foden & Palmer</option>
+    </select>
+</div>
+
+<div class="panel">
+    <h1>TOTAL GOALS [10pts]</h1>
+    <div class="instructions">TOTAL GOALS IN FINAL 4 MATCHES COMBINED.</div>
+    <div class="time-grid" id="totalGoalsGrid" style="grid-template-columns: repeat(3, 1fr); gap:10px;">
+        <button class="time-btn" onclick="selectTotalGoals(this, '0-5')">0-5</button>
+        <button class="time-btn" onclick="selectTotalGoals(this, '6-8')">6-8</button>
+        <button class="time-btn" onclick="selectTotalGoals(this, '9-11')">9-11</button>
+        <button class="time-btn" onclick="selectTotalGoals(this, '12-14')">12-14</button>
+        <button class="time-btn" onclick="selectTotalGoals(this, '15-17')">15-17</button>
+        <button class="time-btn" onclick="selectTotalGoals(this, '18-20')">18-20</button>
+        <button class="time-btn" onclick="selectTotalGoals(this, '21+')">21+</button>
+    </div>
+</div>
+
+<div class="submit-area">
+    <button id="submitBtn" disabled onclick="showSummary()">LOCK PICKS & GENERATE TICKET</button>
+</div>
+
+<div class="submit-overlay" id="submitOverlay">
+  <div class="submit-box">
+    <div class="submit-header">OFFICIAL ENTRY TICKET</div>
+    
+    <div class="submit-body">
+        <div style="text-align:center; margin-bottom:15px; border-bottom:2px solid #333; padding-bottom:10px;">
+            <span style="color:var(--neon-pink); font-family:'Press Start 2P'; font-size:12px;">CONFIRMED</span>
+        </div>
+        
+        <div class="ticket-row"><span class="ticket-label">PLAYER</span> <span class="ticket-val" id="sumUser"></span></div>
+        <div class="ticket-row"><span class="ticket-label">TB (CARDS)</span> <span class="ticket-val" id="sumTB"></span></div>
+        
+        <br>
+        <div style="font-family:'Press Start 2P'; font-size:10px; color:var(--neon-yellow); margin-bottom:5px;">MATCHES</div>
+        <div class="ticket-row"><span class="ticket-label">SF1</span> <span class="ticket-val" id="sumSF1"></span></div>
+        <div class="ticket-row"><span class="ticket-label">SF2</span> <span class="ticket-val" id="sumSF2"></span></div>
+        <div class="ticket-row"><span class="ticket-label">3RD</span> <span class="ticket-val" id="sum3rd"></span></div>
+        <div class="ticket-row"><span class="ticket-label">FINAL</span> <span class="ticket-val" id="sumFin"></span></div>
+        
+        <br>
+        <div style="font-family:'Press Start 2P'; font-size:10px; color:var(--neon-yellow); margin-bottom:5px;">STRATEGY: <span id="sumStratType"></span></div>
+        <div id="sumStratList"></div>
+        
+        <br>
+        <div class="ticket-row"><span class="ticket-label">RED CARD</span> <span class="ticket-val" id="sumRed"></span></div>
+        <div class="ticket-row"><span class="ticket-label">COMBO</span> <span class="ticket-val" id="sumCombo" style="font-size:16px;"></span></div>
+        <div class="ticket-row"><span class="ticket-label">GOALS</span> <span class="ticket-val" id="sumGoals"></span></div>
+
+        <div style="text-align:center; margin-top:20px; padding-top:15px; border-top:2px dashed #444;">
+            <div style="color:var(--neon-pink); font-family:'Press Start 2P'; font-size: 10px; margin-bottom:10px;">[ CAPTURE SCREENSHOT NOW ]</div>
+            <div style="display:flex; gap:10px;">
+                <button onclick="document.getElementById('submitOverlay').style.display='none'" style="flex:1; background:#000; font-size:10px; padding:10px;">EDIT</button>
+                <button onclick="alert('SUBMITTED TO SERVER')" style="flex:1; background:var(--neon-cyan); color:#000; border-color:#fff; font-size:10px; padding:10px;">CONFIRM</button>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
 
 <script>
-(function(){
-  'use strict';
+// --- CONFIGURATION ---
+const CONFIG = {
+    sf1_home: "ENGLAND",
+    sf1_away: "FRANCE",
+    sf2_home: "SPAIN",
+    sf2_away: "ARGENTINA"
+};
 
-  const slidesEl = document.getElementById('slides');
-  const dotsEl = document.getElementById('dots');
-  const pillButtons = Array.from(document.querySelectorAll('.neon-pill'));
-  const totalSlides = slidesEl.children.length;
-  let index = 0;
+const TEAMS = [CONFIG.sf1_home, CONFIG.sf1_away, CONFIG.sf2_home, CONFIG.sf2_away];
 
-  // Create dots
-  for(let i=0;i<totalSlides;i++){
-    const d = document.createElement('div');
-    d.className = 'dot';
-    d.dataset.index = i;
-    d.onclick = ()=>goTo(i);
-    dotsEl.appendChild(d);
-  }
+// --- STATE ---
+const picks = {
+    user: '', email: '', tiebreaker: '',
+    sf1: { winner: null, method: null, time: null },
+    sf2: { winner: null, method: null, time: null },
+    p3:  { winner: null, method: null, time: null },
+    fin: { winner: null, method: null, time: null },
+    strategy: null,
+    hedge: [null, null, null, null],
+    risk: null,
+    redCard: null,
+    combo: null,
+    totalGoals: null
+};
 
-  function update(){
-    slidesEl.style.transform = 'translateX(-' + (index * 100) + '%)';
+// --- INITIALIZATION ---
+window.onload = function() {
+    renderMatch('sf1-container', 'sf1', CONFIG.sf1_home, CONFIG.sf1_away, 'SEMI FINAL 1');
+    renderMatch('sf2-container', 'sf2', CONFIG.sf2_home, CONFIG.sf2_away, 'SEMI FINAL 2');
+    renderMatch('playoff-container', 'p3', 'SF1 LOSER', 'SF2 LOSER', '3RD PLACE PLAYOFF');
+    renderMatch('final-container', 'fin', 'SF1 WINNER', 'SF2 WINNER', 'THE FINAL');
     
-    // Update dots
-    Array.from(dotsEl.children).forEach((dot,i)=>{
-      dot.classList.toggle('active', i === index);
+    renderRedCardOptions();
+    populateTeamDropdowns();
+};
+
+// --- RENDER FUNCTIONS ---
+function renderMatch(containerId, matchKey, home, away, title) {
+    const c = document.getElementById(containerId);
+    
+    let html = `
+    <div class="match-container">
+        <div class="match-title">${title}</div>
+        
+        <div class="method-grid" id="grid-${matchKey}">
+            <div class="team-col">
+                <div class="team-header">${home}</div>
+                <button class="btn-method" onclick="selectMatchResult('${matchKey}', '${home}', 'Normal Time', this)">NORMAL TIME</button>
+                <button class="btn-method" onclick="selectMatchResult('${matchKey}', '${home}', 'Extra Time', this)">EXTRA TIME</button>
+                <button class="btn-method" onclick="selectMatchResult('${matchKey}', '${home}', 'Penalties', this)">PENALTIES</button>
+            </div>
+            <div class="team-col">
+                <div class="team-header">${away}</div>
+                <button class="btn-method" onclick="selectMatchResult('${matchKey}', '${away}', 'Normal Time', this)">NORMAL TIME</button>
+                <button class="btn-method" onclick="selectMatchResult('${matchKey}', '${away}', 'Extra Time', this)">EXTRA TIME</button>
+                <button class="btn-method" onclick="selectMatchResult('${matchKey}', '${away}', 'Penalties', this)">PENALTIES</button>
+            </div>
+        </div>
+
+        <div style="font-family:'Press Start 2P'; font-size:8px; color:var(--text-main); margin-bottom:8px; text-align:left;">TIME OF 1ST GOAL</div>
+        <div class="time-grid" id="time-${matchKey}">
+            ${['0-10','11-20','21-30','31-40','41-50','51-60','61-70','71-80','81-90', 'Added Time', 'ET 1st', 'ET 2nd']
+              .map(t => `<button class="time-btn" onclick="selectMatchTime('${matchKey}', '${t}', this)">${t}</button>`).join('')}
+        </div>
+    </div>
+    `;
+    c.innerHTML = html;
+}
+
+function renderRedCardOptions() {
+    const opts = [
+        {id:'A', text: "NO RED CARDS (FINAL 4 GAMES)"},
+        {id:'B', text: "EXACTLY 1 RED CARD"},
+        {id:'C', text: "MORE THAN 1 RED CARD"},
+        {id:'D', text: "RED CARD IN A SEMI FINAL"},
+        {id:'E', text: "RED CARD IN FINAL OR 3RD PLACE"},
+        {id:'F', text: "RED CARD IN THE FINAL"}
+    ];
+    
+    const container = document.getElementById('redCardOptions');
+    opts.forEach(opt => {
+        const div = document.createElement('div');
+        div.className = 'option-row';
+        div.innerHTML = `<span class="opt-letter">${opt.id}</span> <span>${opt.text}</span>`;
+        div.onclick = () => selectRedCard(opt.id, div);
+        container.appendChild(div);
     });
+}
 
-    // Update neon pills
-    pillButtons.forEach((p,i)=>{
-      p.classList.toggle('active', i === index);
+function populateTeamDropdowns() {
+    const selects = ['rank1', 'rank2', 'rank3', 'rank4', 'riskSelect'];
+    selects.forEach(sId => {
+        const sel = document.getElementById(sId);
+        TEAMS.forEach(team => {
+            const opt = document.createElement('option');
+            opt.value = team;
+            opt.text = team;
+            sel.add(opt);
+        });
     });
-  }
+}
 
-  function goTo(i){
-    index = (i + totalSlides) % totalSlides;
-    update();
-  }
+// --- INTERACTION LOGIC ---
 
-  // Neon pill navigation
-  pillButtons.forEach(btn=>{
-    btn.onclick = ()=>{
-      const idx = parseInt(btn.getAttribute('data-index'), 10);
-      goTo(idx);
-    };
-  });
+function selectMatchResult(matchKey, winner, method, btn) {
+    const grid = document.getElementById(`grid-${matchKey}`);
+    grid.querySelectorAll('.btn-method').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    
+    picks[matchKey].winner = winner;
+    picks[matchKey].method = method;
+    validate();
+}
 
-  // Keyboard nav (Arrow keys)
-  window.addEventListener('keydown', (e)=>{
-    if(e.key === 'ArrowLeft') goTo(index - 1);
-    if(e.key === 'ArrowRight') goTo(index + 1);
-  });
+function selectMatchTime(matchKey, time, btn) {
+    const grid = document.getElementById(`time-${matchKey}`);
+    grid.querySelectorAll('.time-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    
+    picks[matchKey].time = time;
+    validate();
+}
 
-  // Init
-  goTo(0);
-})();
+function setStrategy(strat) {
+    picks.strategy = strat;
+    
+    document.getElementById('btnHedge').className = strat === 'hedge' ? 'strat-btn active-hedge' : 'strat-btn';
+    document.getElementById('btnRisk').className = strat === 'risk' ? 'strat-btn active-risk' : 'strat-btn';
+    
+    document.getElementById('hedgeContent').className = strat === 'hedge' ? 'strat-content visible' : 'strat-content';
+    document.getElementById('riskContent').className = strat === 'risk' ? 'strat-content visible' : 'strat-content';
+    
+    // Clear other data
+    if(strat === 'risk') {
+        ['rank1','rank2','rank3','rank4'].forEach(id => document.getElementById(id).value = "");
+    } else {
+        document.getElementById('riskSelect').value = "";
+    }
+    
+    validate();
+}
+
+function selectRedCard(optId, el) {
+    document.querySelectorAll('.option-row').forEach(row => row.classList.remove('selected'));
+    el.classList.add('selected');
+    picks.redCard = optId;
+    validate();
+}
+
+function selectTotalGoals(btn, val) {
+    document.getElementById('totalGoalsGrid').querySelectorAll('.time-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    picks.totalGoals = val;
+    validate();
+}
+
+// --- VALIDATION ---
+function validate() {
+    picks.user = document.getElementById('username').value;
+    picks.email = document.getElementById('email').value;
+    picks.tiebreaker = document.getElementById('tiebreaker').value;
+    
+    let valid = true;
+    const sysMsg = document.getElementById('sysMsg');
+    
+    if(!picks.user || !picks.email || !picks.tiebreaker) {
+        valid = false;
+        sysMsg.className = 'sys';
+        sysMsg.innerHTML = "AWAITING CREDENTIALS...";
+    } else {
+        sysMsg.className = 'sys active';
+        sysMsg.innerHTML = "CREDENTIALS ACCEPTED. COMPLETE GRID.";
+    }
+    
+    ['sf1','sf2','p3','fin'].forEach(m => {
+        if(!picks[m].winner || !picks[m].time) valid = false;
+    });
+    
+    if(!picks.strategy) valid = false;
+    if(picks.strategy === 'risk') {
+        picks.risk = document.getElementById('riskSelect').value;
+        if(!picks.risk) valid = false;
+    } else if (picks.strategy === 'hedge') {
+        picks.hedge = [
+            document.getElementById('rank1').value,
+            document.getElementById('rank2').value,
+            document.getElementById('rank3').value,
+            document.getElementById('rank4').value
+        ];
+        if(picks.hedge.includes("")) valid = false;
+    }
+    
+    if(!picks.redCard) valid = false;
+    picks.combo = document.getElementById('playerCombo').value;
+    if(!picks.combo) valid = false;
+    if(!picks.totalGoals) valid = false;
+    
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = !valid;
+    if(valid) {
+        btn.classList.add('ready');
+        sysMsg.className = 'sys complete';
+        sysMsg.innerHTML = "SYSTEM READY. INSERT COIN.";
+    } else {
+        btn.classList.remove('ready');
+    }
+}
+
+// --- SUMMARY ---
+function showSummary() {
+    document.getElementById('sumUser').textContent = picks.user.toUpperCase();
+    document.getElementById('sumTB').textContent = picks.tiebreaker;
+    
+    document.getElementById('sumSF1').textContent = `${picks.sf1.winner} (${picks.sf1.time})`;
+    document.getElementById('sumSF2').textContent = `${picks.sf2.winner} (${picks.sf2.time})`;
+    document.getElementById('sum3rd').textContent = `${picks.p3.winner} (${picks.p3.time})`;
+    document.getElementById('sumFin').textContent = `${picks.fin.winner} (${picks.fin.time})`;
+    
+    document.getElementById('sumStratType').textContent = picks.strategy.toUpperCase();
+    
+    let stratHtml = '';
+    if(picks.strategy === 'risk') {
+        stratHtml = `<div class="ticket-row"><span class="ticket-label" style="color:var(--neon-pink)">CHAMPION</span> <span class="ticket-val">${picks.risk}</span></div>`;
+    } else {
+        stratHtml = `
+            <div class="ticket-row"><span class="ticket-label">1ST</span> <span class="ticket-val">${picks.hedge[0]}</span></div>
+            <div class="ticket-row"><span class="ticket-label">2ND</span> <span class="ticket-val">${picks.hedge[1]}</span></div>
+            <div class="ticket-row"><span class="ticket-label">3RD</span> <span class="ticket-val">${picks.hedge[2]}</span></div>
+        `;
+    }
+    document.getElementById('sumStratList').innerHTML = stratHtml;
+    
+    document.getElementById('sumRed').textContent = "OPT " + picks.redCard;
+    document.getElementById('sumCombo').textContent = picks.combo;
+    document.getElementById('sumGoals').textContent = picks.totalGoals;
+    
+    document.getElementById('submitOverlay').style.display = 'flex';
+}
 </script>
 </body>
 </html>
